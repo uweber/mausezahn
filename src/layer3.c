@@ -319,7 +319,8 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
 	     tx.ip_option[0] = 137; // strict source route
 	  }
 	tx.ip_option[1] = 3+(dummy*4); // length
-	tx.ip_option[2] = 4+4*dummy;   // smallest pointer, points to first address, which is
+	tx.ip_option[2] = 4; // Use first IP address as next hop
+	//tx.ip_option[2] = 4+4*dummy;   // smallest pointer, points to first address, which is
 	                               // the 4th byte within this option
 	
 	tx.ip_option_s = 3;
@@ -330,6 +331,8 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
 	     tx.ip_option[tx.ip_option_s] = (u_int8_t) str2int(s);
 	     tx.ip_option_s++;
 	  } while ( (s=strtok(NULL, ".+-:;/>")) != NULL );
+
+	tx.ip_option_s++; // EOL
 	
 	// add empty space for record route: //// NONSENSE? /////
 	/*
