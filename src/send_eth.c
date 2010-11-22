@@ -154,7 +154,7 @@ libnet_ptag_t  create_eth_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  
    
    // Get CLI arguments:
    // If NOT set, default: 0x800 or ETHERTYPE_MPLS if MPLS is used (see init.c)
-   if (getarg(tx.arg_string,"type", argval)==1)
+   if (getarg(tx.arg_string,"ether_type", argval)==1)
      {
 	et_len = str2hex (argval, et, 2);
 	

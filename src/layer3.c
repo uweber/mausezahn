@@ -64,7 +64,7 @@
 		"|\n" \
 		"| Additionally the Ethertype can be specified:\n" \
 		"|\n" \
-		"|  type     00:00-ff:ff    Only accessible in L2 mode (default = 08:00 = IP)\n" \
+		"|  ether_type 00:00-ff:ff  Only accessible in L2 mode (default = 08:00 = IPv4)\n" \
 		"|  \n"
 
 
