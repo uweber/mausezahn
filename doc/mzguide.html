@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Mausezahn User's Guide</title>
+<meta name="author" content="Herbert Haas" />
+<meta name="date" content="2010-02-10" />
+<meta name="copyright" content="Copyright (c) 2007-2009 by Herbert Haas." />
+<style type="text/css">
+
+@import url(html4css1.css);
+
+body {
+  font: 90% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: black;
+  margin: 2em;
+  padding: 2em;
+}
+
+a[href] {
+  color: #436976;
+  background-color: transparent;
+}
+
+a.toc-backref {
+  text-decoration: none;
+}
+
+h1 a[href] {
+  text-decoration: none;
+  color: #ff7e00;
+  background-color: transparent;
+}
+
+a.strong {
+  font-weight: bold;
+}
+
+img {
+  margin: 0;
+  border: 0;
+}
+
+p {
+  margin: 0.5em 0 1em 0;
+  line-height: 1.5em;
+}
+p a {
+  text-decoration: underline;
+}
+p a:visited {
+  color: purple;
+  background-color: transparent;
+}
+p a:active {
+  color: red;
+  background-color: transparent;
+}
+a:hover {
+  text-decoration: none;
+}
+p img {
+  border: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #003a6b;
+  background-color: transparent;
+  font: 100% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding-top: 0.5em;
+}
+
+h1 {
+  font-size: 180%;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #ff7e00;
+}
+h2 {
+  font-size: 140%;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #aaa;
+}
+h3 {
+  font-size: 130%;
+  margin-bottom: 0.5em;
+}
+h4 {
+  font-size: 110%;
+  font-weight: bold;
+}
+h5 {
+  font-size: 100%;
+  font-weight: bold;
+}
+h6 {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+ul a, ol a {
+  text-decoration: underline;
+}
+
+dt {
+  font-weight: bold;
+}
+dt a {
+  text-decoration: none;
+}
+
+dd {
+  line-height: 1.5em;
+  margin-bottom: 1em;
+}
+
+legend {
+  background: #ffffff;
+  padding: 0.5em;
+}
+
+form {
+  margin: 0;
+}
+
+
+dl.form {
+  margin: 0;
+  padding: 1em;
+}
+
+dl.form dt {
+  width: 30%;
+  float: left;
+  margin: 0;
+  padding: 0 0.5em 0.5em 0;
+  text-align: right;
+}
+
+input {
+  font: 100% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  color: black;
+  background-color: white;
+  vertical-align: middle;
+}
+
+abbr, acronym, .explain {
+  color: black;
+  background-color: transparent;
+}
+
+q, blockquote {
+}
+
+code, pre {
+  font-family: monospace;
+  font-size: 1.2em;
+  display: block;
+  padding: 10px;
+  border: 1px solid #838183;
+  background-color: #eee;
+  color: #000;
+  overflow: auto;
+  margin: 0.5em 1em;
+}
+
+tt.docutils {
+  background-color: #eeeeee;
+}
+
+
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+  
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+    
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+</style>
+</head>
+<body>
+<div class="document" id="mausezahn-user-s-guide">
+<h1 class="title">Mausezahn User's Guide</h1>
+<h2 class="subtitle" id="part-one-direct-mode">Part One - Direct Mode</h2>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Herbert Haas</td></tr>
+<tr><th class="docinfo-name">Address:</th>
+<td><pre class="address">
+herbert AT perihel DOT at
+<a class="last reference external" href="http://www.perihel.at/sec/mz">http://www.perihel.at/sec/mz</a>
+</pre>
+</td></tr>
+<tr><th class="docinfo-name">Revision:</th>
+<td>0.38.1</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2010-02-10</td></tr>
+<tr><th class="docinfo-name">Copyright:</th>
+<td>Copyright (c) 2007-2009 by Herbert Haas.</td></tr>
+</tbody>
+</table>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="#note" id="id1">1&nbsp;&nbsp;&nbsp;Note</a></li>
+<li><a class="reference internal" href="#what-is-mausezahn" id="id2">2&nbsp;&nbsp;&nbsp;What is Mausezahn?</a></li>
+<li><a class="reference internal" href="#disclaimer-and-license" id="id3">3&nbsp;&nbsp;&nbsp;Disclaimer and License</a></li>
+<li><a class="reference internal" href="#basics" id="id4">4&nbsp;&nbsp;&nbsp;Basics</a><ul class="auto-toc">
+<li><a class="reference internal" href="#how-to-specify-hex-digits" id="id5">4.1&nbsp;&nbsp;&nbsp;How to specify hex digits</a></li>
+<li><a class="reference internal" href="#basic-operations" id="id6">4.2&nbsp;&nbsp;&nbsp;Basic operations</a></li>
+<li><a class="reference internal" href="#the-automatic-packet-builder" id="id7">4.3&nbsp;&nbsp;&nbsp;The automatic packet builder</a></li>
+<li><a class="reference internal" href="#packet-count-and-delay" id="id8">4.4&nbsp;&nbsp;&nbsp;Packet count and delay</a></li>
+<li><a class="reference internal" href="#source-and-destination-addresses" id="id9">4.5&nbsp;&nbsp;&nbsp;Source and destination addresses</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#layer-2" id="id10">5&nbsp;&nbsp;&nbsp;Layer-2</a><ul class="auto-toc">
+<li><a class="reference internal" href="#direct-link-access" id="id11">5.1&nbsp;&nbsp;&nbsp;Direct link access</a></li>
+<li><a class="reference internal" href="#arp" id="id12">5.2&nbsp;&nbsp;&nbsp;ARP</a></li>
+<li><a class="reference internal" href="#bpdu" id="id13">5.3&nbsp;&nbsp;&nbsp;BPDU</a></li>
+<li><a class="reference internal" href="#cdp" id="id14">5.4&nbsp;&nbsp;&nbsp;CDP</a></li>
+<li><a class="reference internal" href="#q-vlan-tags" id="id15">5.5&nbsp;&nbsp;&nbsp;802.1Q VLAN Tags</a></li>
+<li><a class="reference internal" href="#mpls-labels" id="id16">5.6&nbsp;&nbsp;&nbsp;MPLS labels</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#layer-3-7" id="id17">6&nbsp;&nbsp;&nbsp;Layer 3-7</a><ul class="auto-toc">
+<li><a class="reference internal" href="#ip" id="id18">6.1&nbsp;&nbsp;&nbsp;IP</a></li>
+<li><a class="reference internal" href="#udp" id="id19">6.2&nbsp;&nbsp;&nbsp;UDP</a></li>
+<li><a class="reference internal" href="#icmp" id="id20">6.3&nbsp;&nbsp;&nbsp;ICMP</a></li>
+<li><a class="reference internal" href="#tcp" id="id21">6.4&nbsp;&nbsp;&nbsp;TCP</a></li>
+<li><a class="reference internal" href="#dns" id="id22">6.5&nbsp;&nbsp;&nbsp;DNS</a></li>
+<li><a class="reference internal" href="#rtp-and-voip-path-measurements" id="id23">6.6&nbsp;&nbsp;&nbsp;RTP and VoIP path measurements</a></li>
+<li><a class="reference internal" href="#syslog" id="id24">6.7&nbsp;&nbsp;&nbsp;Syslog</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dear-users" id="id25">7&nbsp;&nbsp;&nbsp;Dear users</a></li>
+</ul>
+</div>
+<div class="section" id="note">
+<h1><a class="toc-backref" href="#id1">1&nbsp;&nbsp;&nbsp;Note</a></h1>
+<p>This User's Guide explains Mausezahn's <strong>direct mode</strong> which allows you to
+create frames and packets right from the Linux command line. This mode is the
+legacy mode; it is NOT multi-threaded and lacks Mausezahn's advanced features
+which are integrated in the newer <a class="reference external" href="http://www.perihel.at/sec/mz/mops.html">interactive mode</a>.</p>
+</div>
+<div class="section" id="what-is-mausezahn">
+<h1><a class="toc-backref" href="#id2">2&nbsp;&nbsp;&nbsp;What is Mausezahn?</a></h1>
+<p>Mausezahn is a <strong>fast traffic generator</strong> written in C which allows you to
+send nearly every possible and impossible packet. Mausezahn can be used for
+example</p>
+<blockquote>
+<ul class="simple">
+<li>As traffic generator (e. g. to stress multicast networks)</li>
+<li>For penetration testing of firewalls and IDS</li>
+<li>For DoS attacks on networks (for audit purposes of course)</li>
+<li>To find bugs in network software or appliances</li>
+<li>For reconnaissance attacks using ping sweeps and port scans</li>
+<li>To test network behaviour under strange circumstances (stress test, malformed packets, ...)</li>
+<li>As didactical tool during lab exercises</li>
+</ul>
+</blockquote>
+<p>...and more. Mausezahn is basically a versatile packet creation tool on the
+command line with a simple syntax and online help. It could also be used
+within (bash-) scripts to perform combination of tests.</p>
+<p>Currently Mausezahn is only available for Linux (and other UNIX-like) platforms.
+There will be no Windows version.</p>
+</div>
+<div class="section" id="disclaimer-and-license">
+<h1><a class="toc-backref" href="#id3">3&nbsp;&nbsp;&nbsp;Disclaimer and License</a></h1>
+<p>Mausezahn is basically a traffic generator as well as a network and firewall
+testing tool.  Don't use this tool when you are not aware of its consequences
+or have only little knowledge about networks and data communication. If you
+abuse Mausezahn for unallowed attacks and get caught, or damage something of
+your own, then this is completely your fault.</p>
+<p>Since version 0.33 Mausezahn is licensed under <a class="reference external" href="http://www.gnu.org/licenses/gpl-2.0.html">GPLv2</a></p>
+</div>
+<div class="section" id="basics">
+<h1><a class="toc-backref" href="#id4">4&nbsp;&nbsp;&nbsp;Basics</a></h1>
+<div class="section" id="how-to-specify-hex-digits">
+<h2><a class="toc-backref" href="#id5">4.1&nbsp;&nbsp;&nbsp;How to specify hex digits</a></h2>
+<p>Many arguments allow direct byte input. Bytes are represented as two
+hexadecimal digits. Multiple bytes must be separated either by spaces, colons,
+or dashes -- whatever you prefer. The following byte strings are equivalent:</p>
+<pre class="literal-block">
+&quot;aa:bb cc-dd-ee ff 01 02 03-04 05&quot;
+
+&quot;aa bb cc dd ee ff:01:02:03:04 05&quot;
+</pre>
+<p>As first example, you may want to send an arbitrary fancy (possibly invalid)
+frame right through your network card:</p>
+<pre class="literal-block">
+# mz ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:08:00:ca:fe:ba:be
+</pre>
+<p>or equivalently but more readable:</p>
+<pre class="literal-block">
+# mz ff:ff:ff:ff:ff:ff-ff:ff:ff:ff:ff:ff-08:00-ca:fe:ba:be
+</pre>
+</div>
+<div class="section" id="basic-operations">
+<h2><a class="toc-backref" href="#id6">4.2&nbsp;&nbsp;&nbsp;Basic operations</a></h2>
+<p>All <strong>major</strong> command line options are listed when you execute Mausezahn without arguments.</p>
+<p>For practical usage keep the following special (not so widely known) options in mind:</p>
+<pre class="literal-block">
+-r                    Multiplies the specified delay with a random value.
+-p &lt;length&gt;           Pad the raw frame to specified length (using random
+                      bytes).
+
+-P &lt;ASCII Payload&gt;    Use the specified ASCII payload.
+-f &lt;filename&gt;         Read the ASCII payload from a file.
+-F &lt;filename&gt;         Read the hexadecimal payload from a file.
+
+-S                    Simulation mode: DOES NOT put anything on the wire.
+                      This is typically combined with one of the verbose
+                      modes (-v or V).
+</pre>
+<p>Many options require a keyword or a number but the <strong>-t</strong> option is an
+exception since it requires both a <strong>packet type</strong> (such as <em>ip</em>, <em>udp</em>,
+<em>dns</em>, etc) <strong>and</strong> an <strong>argument string</strong> which is specific for that packet
+type.</p>
+<p>Here are some simple examples:</p>
+<pre class="literal-block">
+# mz -t help
+# mz -t tcp help
+# mz eth3 -t udp sp=69,dp=69,p=ca:fe:ba:be
+</pre>
+<p><strong>Note:</strong> Don't forget that on the CLI the Linux shell (usually the Bash)
+interpretes spaces as a delimiter character. That is, if you are specifying an
+argument that consists of multiple words with spaces inbetween, you MUST group
+this with quotes.</p>
+<p>For example, instead of</p>
+<pre class="literal-block">
+# mz eth0 -t udp sp=1, dp=80, p=00:11:22:33
+</pre>
+<p>you could either omit the spaces</p>
+<pre class="literal-block">
+# mz eth0 -t udp sp=1,dp=80,p=00:11:22:33
+</pre>
+<p>or, even more safe, use quotes:</p>
+<pre class="literal-block">
+# mz eth0 -t udp &quot;sp=1, dp=80, p=00:11:22:33&quot;
+</pre>
+<p>In order to monitor what's going on you can enable the <strong>verbose</strong> mode using
+the <strong>-v</strong> option. The opposite is the quiet mode (<strong>-q</strong>) which will keep
+Mausezahn absolutely quiet (except for error messages and warnings.)</p>
+<p>Don't confuse the payload argument <tt class="docutils literal"><span class="pre">p=...</span></tt> with the <strong>padding option</strong>
+<tt class="docutils literal"><span class="pre">-p</span></tt>. The latter is used <em>outside</em> the quotes!</p>
+</div>
+<div class="section" id="the-automatic-packet-builder">
+<h2><a class="toc-backref" href="#id7">4.3&nbsp;&nbsp;&nbsp;The automatic packet builder</a></h2>
+<p>An important argument is &quot;-t&quot; which invokes a packet builder. Currently there
+are packet builders for ARP, BPDU, CDP, IP, partly ICMP, UDP, TCP, RTP, DNS,
+and SYSLOG. (Additionally you can insert a VLAN tag or a MPLS label stack but
+this works independent of the packet builder.)</p>
+<p>You get context specific help of every packet builder using the <strong>help</strong>
+keyword, such as:</p>
+<pre class="literal-block">
+# mz -t bpdu help
+# mz -t tcp help
+</pre>
+<p>For every packet you may specify an optional payload. This can be done either
+via HEX notation using the <strong>payload</strong> (or short <strong>p</strong>) <em>argument</em> or directly
+as ASCII text using the <strong>-P</strong> <em>option</em>:</p>
+<pre class="literal-block">
+mz eth0 -t ip -P &quot;Hello World&quot;                           # ASCII payload
+mz eth0 -t ip p=68:65:6c:6c:6f:20:77:6f:72:6c:64         # hex payload
+mz eth0 -t ip &quot;proto=89,                           \
+               p=68:65:6c:6c:6f:20:77:6f:72:6c:64, \     # same with other
+               ttl=1&quot;                                    # IP arguments
+</pre>
+<p>Note: The raw link access mode only accepts hex payloads (because you specify
+<em>everything</em> in hex here.)</p>
+</div>
+<div class="section" id="packet-count-and-delay">
+<h2><a class="toc-backref" href="#id8">4.4&nbsp;&nbsp;&nbsp;Packet count and delay</a></h2>
+<p>Per default only one packet is sent. If you want to send more packets then use
+the count option <strong>-c &lt;count&gt;</strong>. When count is zero then Mausezahn will send
+forever.</p>
+<p>Per default Mausezahn sends at maximum speed (and this is <em>really</em> fast ;-)).
+If you don't want to overwhelm your network devices or have other reasons to
+send at a slower rate then you might want to specify a <strong>delay</strong> using the
+<strong>-d &lt;delay&gt;</strong> option.</p>
+<p>If you only specify a numeric value it is interpreted in microsecond units.
+Alternatively, for easier use, you might specify units such as seconds <strong>sec</strong>
+or milliseconds <strong>msec</strong>. (You can also abbreviate this with <strong>s</strong> or <strong>m</strong>.)</p>
+<p><strong>Note:</strong> Don't use spaces between the value and the unit!</p>
+<p>Here are typical examples:</p>
+<p>Send infinite frames as fast as possible:</p>
+<pre class="literal-block">
+# mz -c 0  &quot;aa bb cc dd ....&quot;
+</pre>
+<p>Send 100,000 frames with a 50 msec interval:</p>
+<pre class="literal-block">
+# mz -c 100000  -d 50msec &quot;aa bb cc dd ....&quot;
+</pre>
+<p>Send infinite BPDU frames in a 2 second interval:</p>
+<pre class="literal-block">
+# mz -c 0 -d 2s -t bpdu conf
+</pre>
+<p><strong>Note:</strong> Mausezahn does not support fractional numbers. If you want to
+specify for example 2.5 seconds then express this e. g. in milliseconds (2500
+msec).</p>
+</div>
+<div class="section" id="source-and-destination-addresses">
+<h2><a class="toc-backref" href="#id9">4.5&nbsp;&nbsp;&nbsp;Source and destination addresses</a></h2>
+<p><em>As mnemonic trick keep in mind that all packets run from &quot;A&quot; to &quot;B&quot;.</em></p>
+<p>You can always specify source and/or destination MAC addresses using the
+<strong>-a</strong> and <strong>-b</strong> options, respectively. These options also allow keywords
+such as <strong>rand</strong>, <strong>own</strong>, <strong>bpdu</strong>, <strong>cisco</strong>, and others.</p>
+<p>Similarily you can specify source and destination IP addresses using the
+<strong>-A</strong> and <strong>-B</strong> options, respectively. These options also support <strong>FQDNs</strong>
+(i. e. domain names) and <strong>ranges</strong> such as 192.168.0.0/24 or
+10.0.0.11-10.0.3.22. Additionally (only) the source address supports the
+<strong>rand</strong> keyword (ideal for &quot;attacks&quot;).</p>
+<p><strong>Note:</strong> When you use the packet builder for IP-based packets (e. g. UDP or
+TCP) then Mausezahn automatically cares about correct MAC and IP addresses (i.
+e. it performs ARP, DHCP, and DNS for you). But when you specify at least a
+single link-layer address (or any other L2 option such as a VLAN tag or MPLS
+header) then <strong>ARP is disabled</strong> and you must care for the Ethernet
+destination address for yourself.</p>
+</div>
+</div>
+<div class="section" id="layer-2">
+<h1><a class="toc-backref" href="#id10">5&nbsp;&nbsp;&nbsp;Layer-2</a></h1>
+<div class="section" id="direct-link-access">
+<h2><a class="toc-backref" href="#id11">5.1&nbsp;&nbsp;&nbsp;Direct link access</a></h2>
+<p>Mausezahn allows you to send <strong>ANY</strong> chain of bytes directly through your
+Ethernet interface:</p>
+<pre class="literal-block">
+# mz eth0 &quot;ff:ff:ff:ff:ff:ff ff:ff:ff:ff:ff:ff 00:00 ca:fe:ba:be&quot;
+</pre>
+<p>This way you can craft every packet you want but you must do it by hand.</p>
+<p><strong>Note:</strong> On WiFi interfaces the header is much more complicated and
+automatically created by the WiFi-driver. I plan to add 'direct WiFi access'
+as another option soon(er or later).</p>
+<p>As example to introduce some interesting options, lets continuously send
+frames at max speed with random source MAC address and broadcast destination
+address, additionally pad the frame to 1000 bytes:</p>
+<pre class="literal-block">
+# mz eth0 -c 0 -a rand -b bcast -p 1000 &quot;08 00 aa bb cc dd&quot;
+</pre>
+<p>The direct link access supports automatic <strong>padding</strong> using the <strong>-p &lt;total
+frame length&gt;</strong> option. This allows you to pad a raw L2 frame to the desired
+length. You must specify the <strong>total</strong> length and the total frame length must
+have at least 15 bytes for technical reasons.  Zero bytes are used for this
+padding.</p>
+</div>
+<div class="section" id="arp">
+<h2><a class="toc-backref" href="#id12">5.2&nbsp;&nbsp;&nbsp;ARP</a></h2>
+<p>Mausezahn provides a simple interface to the ARP packet. You can specify the
+ARP method (request|reply) and up to four arguments: <strong>sendermac</strong>,
+<strong>targetmac</strong>, <strong>senderip</strong>, <strong>targetip</strong>, or short <strong>smac</strong>, <strong>tmac</strong>,
+<strong>sip</strong>, <strong>tip</strong>.</p>
+<p>By default an ARP reply is sent with your own interface addresses as source
+MAC and IP address, and a broadcast destination MAC/IP address.</p>
+<p>Send a gratitious ARP (as used for duplicate IP detection):</p>
+<pre class="literal-block">
+mz eth0 -t arp
+</pre>
+<p>ARP cache poisoning:</p>
+<pre class="literal-block">
+mz eth0 -t arp &quot;reply, senderip=192.168.0.1, targetmac=00:00:0c:01:02:03, \
+                targetip=172.16.1.50&quot;
+</pre>
+<p>where by default your interface MAC address will be used as <em>sendermac</em>,
+<em>senderip</em> denotes the spoofed IP, <em>targetmac</em> and <em>targetip</em> identifies the
+receiver.</p>
+<p>By default the <strong>Ethernet</strong> source address is your interface MAC and the
+destination address is broadcast. Of course you can change this using again
+the flags <strong>-a</strong> and <strong>-b</strong>.</p>
+</div>
+<div class="section" id="bpdu">
+<h2><a class="toc-backref" href="#id13">5.3&nbsp;&nbsp;&nbsp;BPDU</a></h2>
+<p>Mausezahn provides a simple interface to the 802.1d BPDU frame format (used to
+create the Spanning Tree in bridged networks).</p>
+<p>By default standard IEEE 802.1d (CST) BPDUs are sent and it is assumed that
+your computer wants to become the root bridge (rid=bid).</p>
+<p>Optionally the 802.3 destination address can be a specified MAC address,
+broadcast, own MAC, or Cisco's PVST+ MAC address. The destination MAC can be
+specified using the -b command which (besides MAC addresses) accepts keywords
+such as <strong>bcast</strong>, <strong>own</strong>, <strong>pvst</strong>, or <strong>stp</strong> (default).</p>
+<p>Since version 0.16 <strong>PVST+</strong> is supported. Simply specify the VLAN for which
+you want to send a BPDU:</p>
+<pre class="literal-block">
+mz eth0 -t bpdu &quot;vlan=123, rid=2000&quot;
+</pre>
+<p>See <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">bpdu</span> <span class="pre">help</span></tt> for more details.</p>
+</div>
+<div class="section" id="cdp">
+<h2><a class="toc-backref" href="#id14">5.4&nbsp;&nbsp;&nbsp;CDP</a></h2>
+<p>Mausezahn can send Cisco Discovery Protocol (CDP) messages since this protocol
+has security relevance. Of course lots of <strong>dirty tricks</strong> are possible; for
+example arbitrary TLVs can be created (using the hex-payload argument for
+example <tt class="docutils literal"><span class="pre">p=00:0e:00:07:01:01:90</span></tt>) and if you want to stress the CDP database
+of some device, Mausezahn can send each CDP message with another system-id
+using the <tt class="docutils literal"><span class="pre">change</span></tt> keyword:</p>
+<pre class="literal-block">
+# mz -t cdp change -c 0
+</pre>
+<p>Some routers and switches may run into deep problems ;-)</p>
+<p>See <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">cdp</span> <span class="pre">help</span></tt> for more details.</p>
+</div>
+<div class="section" id="q-vlan-tags">
+<h2><a class="toc-backref" href="#id15">5.5&nbsp;&nbsp;&nbsp;802.1Q VLAN Tags</a></h2>
+<p>Mausezahn allows simple VLAN tagging for IP (and other higher layer) packets.
+Simply use the option <strong>-Q &lt;[CoS:]VLAN&gt;</strong>, such as <tt class="docutils literal"><span class="pre">-Q</span> <span class="pre">10</span></tt> or <tt class="docutils literal"><span class="pre">-Q</span> <span class="pre">3:921</span></tt>.
+By default CoS=0.</p>
+<p>For example send a TCP packet in VLAN 500 using CoS=7:</p>
+<pre class="literal-block">
+mz eth0 -t tcp -Q 7:500 &quot;dp=80, flags=rst, p=aa:aa:aa&quot;
+</pre>
+<p>You can create as many VLAN tags as you want! This is interesting to create
+<strong>QinQ</strong> encapsulations or <strong>VLAN hopping</strong>:</p>
+<pre class="literal-block">
+# Send a UDP packet with VLAN tags 100 (outer) and 651 (inner)
+mz eth0 -t udp &quot;dp=8888, sp=13442&quot; -P &quot;Mausezahn is great&quot; -Q 100,651
+
+# Don't know if this is useful anywhere but at least it is possible:
+mz eth0 -t udp &quot;dp=8888, sp=13442&quot; -P &quot;Mausezahn is great&quot;  \
+        -Q 6:5,7:732,5:331,5,6
+
+# Mix it with MPLS:
+mz eth0 -t udp &quot;dp=8888, sp=13442&quot; -P &quot;Mausezahn is great&quot; -Q 100,651 -M 314
+</pre>
+<p>Only in <strong>raw Layer 2 mode</strong> you must create the VLAN tag completely by
+yourself. For example if you want to send a frame in VLAN 5 using CoS 0 simply
+specify <tt class="docutils literal"><span class="pre">81:00</span></tt> as type field and for the next two bytes the CoS (, CFI) and
+VLAN values:</p>
+<pre class="literal-block">
+mz eth0 -b bc -a rand &quot;81:00 00:05 08:00 aa-aa-aa-aa-aa-aa-aa-aa-aa&quot;
+</pre>
+</div>
+<div class="section" id="mpls-labels">
+<h2><a class="toc-backref" href="#id16">5.6&nbsp;&nbsp;&nbsp;MPLS labels</a></h2>
+<p>Mausezahn allows you to insert one or more MPLS headers. Simply use the option
+<strong>-M &lt;label:CoS:TTL:BoS&gt;</strong> where only the <strong>label</strong> is mandatory. If you
+specify a second number it is interpreted as the <strong>experimental</strong> bits (the
+<strong>CoS</strong> usually). If you specify a third number it is interpreted as TTL. Per
+default the TTL is set to 255.</p>
+<p>The <strong>Bottom of Stack</strong> flag is set automatically (otherwise the frame would
+be invalid) but if you want you can also set or unset it using the <strong>S</strong> (set)
+and <strong>s</strong> (unset) argument. Note that the BoS must be the <strong>last</strong> argument in
+each MPLS header definition.</p>
+<p>Here are some examples:</p>
+<pre class="literal-block">
+# Use MPLS label 214
+mz eth0 -M 214 -t tcp &quot;dp=80&quot; -P &quot;HTTP...&quot; -B myhost.com
+
+# Use three labels (the 214 is now the outer)
+mz eth0 -M 9999,51,214 -t tcp &quot;dp=80&quot; -P &quot;HTTP...&quot; -B myhost.com
+
+# Use two labels, one with CoS=5 and TTL=1, the other with CoS=7
+mz eth0 -M 100:5:1,500:7 -t tcp &quot;dp=80&quot; -P &quot;HTTP...&quot; -B myhost.com
+
+# Unset the BoS flag (which will result in an invalid frame)
+mz eth0 -M 214:s -t tcp &quot;dp=80&quot; -P &quot;HTTP...&quot; -B myhost.com
+</pre>
+</div>
+</div>
+<div class="section" id="layer-3-7">
+<h1><a class="toc-backref" href="#id17">6&nbsp;&nbsp;&nbsp;Layer 3-7</a></h1>
+<p>IP, UDP, and TCP packets can be padded using the <tt class="docutils literal"><span class="pre">-p</span></tt> option. Currently
+<strong>0x42</strong> is used as padding byte ('the answer'). You cannot pad DNS packets
+(would be useless anyway).</p>
+<div class="section" id="ip">
+<h2><a class="toc-backref" href="#id18">6.1&nbsp;&nbsp;&nbsp;IP</a></h2>
+<p>Mausezahn allows you to send any (malformed or correct) IP packet. Every field
+in the IP header can be manipulated.</p>
+<p>The IP addresses can be specified via the <strong>-A</strong> and <strong>-B</strong> options, denoting
+the source and destination address, respectively. You can also specify an
+address range or a host name (FQDN). Additionally, the source address can also
+be random.</p>
+<p>By default the source address is your interface IP address and the destination
+address is a broadcast.</p>
+<p>Here are some examples:</p>
+<pre class="literal-block">
+# ascii payload:
+mz eth0 -t ip -A rand -B 192.168.1.0/24  -P &quot;hello world&quot;
+
+# hex payload:
+mz eth0 -t ip -A 10.1.0.1-10.1.255.254 -B 255.255.255.255 p=ca:fe:ba:be
+
+# will use correct source IP address:
+mz eth0 -t ip -B www.xyz.com
+</pre>
+<p>The <strong>Type of Service (ToS)</strong> byte can either be specified directly by two
+hexadecimal digits (which means you can also easily set the Explicit
+Congestion Notification (ECN) bits (LSB 1 and 2) or you may only want to
+specify a common <strong>DSCP value</strong> (bits 3-8) using a decimal number (0..63):</p>
+<pre class="literal-block">
+# Packet sent with DSCP = Expedited Forwarding (EF):
+mz eth0 -t ip dscp=46,ttl=1,proto=1,p=08:00:5a:a2:de:ad:be:af
+</pre>
+<p>If you leave the <strong>checksum</strong> zero (or unspecified) the correct checksum will
+be automatically computed. Note that you can only use a wrong checksum when
+you also specify at least one L2 field manually (because then the packet is
+not sent through the kernel).</p>
+</div>
+<div class="section" id="udp">
+<h2><a class="toc-backref" href="#id19">6.2&nbsp;&nbsp;&nbsp;UDP</a></h2>
+<p>Mausezahn support easy UDP datagram generation. Simply specify the destination
+address (<strong>-B</strong> option) and optionally an arbitrary source address (<strong>-A</strong>
+option) and as arguments you may specify the port numbers using the <strong>dp</strong>
+(destination port) and <strong>sp</strong> (source port) arguments and a payload.</p>
+<p>You can also easily specify a whole port range which will result in sending
+multiple packets.  Here are some examples:</p>
+<p>Send test packets to the RTP port range:</p>
+<pre class="literal-block">
+mz eth0 -B 192.168.1.1 -t udp &quot;dp=16384-32767, \
+   p=A1:00:CC:00:00:AB:CD:EE:EE:DD:DD:00&quot;
+</pre>
+<p>Send a DNS request as local broadcast (often a local router replies):</p>
+<pre class="literal-block">
+mz eth0 -t udp dp=53,p=c5-2f-01-00-00-01-00-00-00-00-00-00-03-77-77-\
+                       77-03-78-79-7a-03-63-6f-6d-00-00-01-00-01&quot;
+</pre>
+<p>Additionally you may specify the lenght and checksum using the <strong>len</strong> and
+<strong>sum</strong> arguments (will be set correctly by default).</p>
+<dl class="docutils">
+<dt>Note</dt>
+<dd>Several protocols have <strong>same arguments</strong> such as <strong>len</strong> (length) and
+<strong>sum</strong> (checksum). If you specified a udp type packet (via <strong>-t udp</strong>) and
+want to modify the IP length, then use the alternate keyword <strong>iplen</strong> and
+<strong>ipsum</strong>. Also note that you must specify at least one L2 field which tells
+Mausezahn to build everything without help of your kernel (the kernel would
+not allow to modify the IP checksum and the IP length).</dd>
+</dl>
+</div>
+<div class="section" id="icmp">
+<h2><a class="toc-backref" href="#id20">6.3&nbsp;&nbsp;&nbsp;ICMP</a></h2>
+<p>Mausezahn currently only supports the following ICMP methods:</p>
+<ul class="simple">
+<li>PING (echo request)</li>
+<li>Redirect (various types)</li>
+<li>Unreachable (various types)</li>
+</ul>
+<p>Additional ICMP types will be supported in future. Currently you would need to
+taylor them by your own, e. g.  using the IP packet builder (setting proto=1).</p>
+<p>Use the <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">icmp</span> <span class="pre">help</span></tt> for help on actually implemented options.</p>
+</div>
+<div class="section" id="tcp">
+<h2><a class="toc-backref" href="#id21">6.4&nbsp;&nbsp;&nbsp;TCP</a></h2>
+<p>Mausezahn allows you to easily taylor any TCP packet. Similar as with UDP you
+can specify source and destination port (ranges) using the <strong>sp</strong> and <strong>dp</strong>
+arguments.</p>
+<p>Then you can directly specify the desired <strong>flags</strong> using an &quot;|&quot; as delimiter
+if you want to specify multiple flags. For example, a SYN-Flood attack against
+host 1.1.1.1 using a random source IP address and periodically using all 1023
+well-known ports could be created via:</p>
+<pre class="literal-block">
+mz eth0 -A rand -B 1.1.1.1 -c 0 -t tcp &quot;dp=1-1023, flags=syn&quot;  \
+        -P &quot;Good morning! This is a SYN Flood Attack.          \
+            We apologize for any inconvenience.&quot;
+</pre>
+<p>Be careful with such SYN floods and only use them for firewall testing. Check
+your legal position!</p>
+<p>Remember that a host with an open TCP session only accepts packets with
+correct socket information (addresses and ports) and a valid TCP sequence
+number (SQNR).  If you want to try a DoS attack by sending a RST-flood and you
+do NOT know the target's initial SQNR (which is normally the case) then you
+may want to sweep through a range of sequence numbers:</p>
+<pre class="literal-block">
+mz eth0 -A legal.host.com -B target.host.com \
+        -t tcp &quot;sp=80,dp=80,s=1-4294967295&quot;
+</pre>
+<p>Fortunately the SQNR must match the target host's acknowledgement number plus
+the announced window size.  Since the typical window size is something between
+40000 and 65535 you are MUCH quicker when using an increment using the <strong>ds</strong>
+argument:</p>
+<pre class="literal-block">
+mz eth0 -A legal.host.com -B target.host.com \
+        -t tcp &quot;sp=80, dp=80, s=1-4294967295, ds=40000&quot;
+</pre>
+<p>In the latter case Mausezahn will only send 107375 packets instead of
+4294967295 (which results in a duration of approximately 1 second compared to
+11 hours!).</p>
+<p>Of course you can taylor any TCP packet you like. In future Mausezahn may
+support an automatic 3-way handshake.</p>
+<p>As with other L4 protocols Mausezahn builds a correct IP header but you can
+additionally access every field in the IP packet (also in the Ethernet frame).</p>
+</div>
+<div class="section" id="dns">
+<h2><a class="toc-backref" href="#id22">6.5&nbsp;&nbsp;&nbsp;DNS</a></h2>
+<p>Mausezahn supports UDP-based DNS requests or responses. Typically you may want
+to send a <strong>query</strong> or an <strong>answer</strong>. As usual you can modify every flag in
+the header. Here is an example of a simple query:</p>
+<pre class="literal-block">
+./mz eth0 -B mydns-server.com -t dns &quot;q=www.ibm.com&quot;
+</pre>
+<p>You can also create server-type messages:</p>
+<pre class="literal-block">
+./mz eth0 -A spoofed.dns-server.com -B target.host.com \
+                   &quot;q=www.topsecret.com, a=172.16.1.1&quot;
+</pre>
+<p>The syntax according to the online help (<strong>-t dns help</strong>) is:</p>
+<pre class="literal-block">
+query|q = &lt;name&gt;[:&lt;type&gt;]  ............. where type is per default &quot;A&quot;
+                                         (and class is always &quot;IN&quot;)
+
+answer|a = [&lt;type&gt;:&lt;ttl&gt;:]&lt;rdata&gt; ...... ttl is per default 0.
+         = [&lt;type&gt;:&lt;ttl&gt;:]&lt;rdata&gt;/[&lt;type&gt;:&lt;ttl&gt;:]&lt;rdata&gt;/...
+</pre>
+<p><strong>Note:</strong> If you only use the 'query' option then a query is sent. If you
+additonally add an 'answer' then an answer is sent.</p>
+<blockquote>
+<p>Examples:</p>
+<pre class="literal-block">
+q = www.xyz.com
+q = www.xyz.com, a=192.168.1.10
+q = www.xyz.com, a=A:3600:192.168.1.10
+q = www.xyz.com, a=CNAME:3600:abc.com/A:3600:192.168.1.10
+</pre>
+</blockquote>
+<p>Please try out <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">dns</span> <span class="pre">help</span></tt> to see the many other optional command line
+options.</p>
+</div>
+<div class="section" id="rtp-and-voip-path-measurements">
+<h2><a class="toc-backref" href="#id23">6.6&nbsp;&nbsp;&nbsp;RTP and VoIP path measurements</a></h2>
+<p>Mausezahn can send arbitrary Real Time Protocol (RTP) packets. Per default a
+classical G.711 codec (20 ms segment size, 160 bytes) is assumed.</p>
+<p>You can measure jitter, packet loss and reordering along a path between two
+hosts running Mausezahn. The jitter measurement is either done following the
+variance low-pass filtered estimation specified in RFC 3550 or using an
+alternative &quot;real-time&quot; method which is even more precise (the RFC-method is
+used by default).</p>
+<p>For example on Host1 you start a transmission process:</p>
+<pre class="literal-block">
+# mz -t rtp -B 192.168.1.19
+</pre>
+<p>And on Host2 (192.168.1.19) a receiving process which performs the measurement:</p>
+<pre class="literal-block">
+# mz -T rtp
+</pre>
+<p>Note that the option flag with the capital &quot;T&quot; means that it is a server RTP
+process, waiting for incoming RTP packets from any Mausezahn source.</p>
+<p>In case you want to restrict the measurement to a specific source or you want
+to perform a bidirectional measurement, you must specify a <strong>stream
+identifier</strong>.</p>
+<p>Here is an example for bidirectional measurements which logs the running jitter average
+in a file:</p>
+<pre class="literal-block">
+Host1# mz -t rtp id=11:11:11:11 -B 192.168.2.2 &amp;
+Host1# mz -T rtp id=22:22:22:22 &quot;log, path=/tmp/mz/&quot;
+
+Host2# mz -t rtp id=22:22:22:22 -B 192.168.1.1 &amp;
+Host2# mz -T rtp id=11:11:11:11 &quot;log, path=/tmp/mz/&quot;
+</pre>
+<p>In any case the measurements are printed continuously onto the screen; by
+default it looks like this:</p>
+<pre class="literal-block">
+0.00                     0.19                      0.38                      0.57
+|-------------------------|-------------------------|-------------------------|
+#########                                                                      0.07 msec
+####################                                                           0.14 msec
+##                                                                             0.02 msec
+###                                                                            0.02 msec
+#########                                                                      0.07 msec
+####                                                                           0.03 msec
+#########                                                                      0.07 msec
+#############                                                                  0.10 msec
+##                                                                             0.02 msec
+###########################################                                    0.31 msec
+#########                                                                      0.07 msec
+##############################################                                 0.33 msec
+###############                                                                0.11 msec
+##########                                                                     0.07 msec
+###############                                                                0.11 msec
+##########################################################                     0.42 msec
+#####                                                                          0.04 msec
+</pre>
+<p>More information is shown using the <strong>txt</strong> keyword:</p>
+<pre class="literal-block">
+# mz -T rtp txt
+Got 100 packets from host 192.168.0.3: 0 lost (0 absolute lost), 1 out of order
+  Jitter_RFC (low pass filtered) = 30 usec
+  Samples jitter (min/avg/max)   = 1/186/2527 usec
+  Delta-RX (min/avg/max)         = 2010/20167/24805 usec
+
+Got 100 packets from host 192.168.0.3: 0 lost (0 absolute lost), 1 out of order
+  Jitter_RFC (low pass filtered) = 17 usec
+  Samples jitter (min/avg/max)   = 1/53/192 usec
+  Delta-RX (min/avg/max)         = 20001/20376/20574 usec
+
+Got 100 packets from host 192.168.0.3: 0 lost (0 absolute lost), 1 out of order
+  Jitter_RFC (low pass filtered) = 120 usec
+  Samples jitter (min/avg/max)   = 0/91/1683 usec
+  Delta-RX (min/avg/max)         = 18673/20378/24822 usec
+</pre>
+<p>See <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">rtp</span> <span class="pre">help</span></tt> and <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-T</span> <span class="pre">rtp</span> <span class="pre">help</span></tt> for more details.</p>
+</div>
+<div class="section" id="syslog">
+<h2><a class="toc-backref" href="#id24">6.7&nbsp;&nbsp;&nbsp;Syslog</a></h2>
+<p>The traditional Syslog protocol is widely used even in professional networks
+and is sometimes vulnerable. For example you might insert forged Syslog
+messages by spoofing your source address (e. g. impersonate the address of a
+legitime network device):</p>
+<pre class="literal-block">
+mz -t syslog sev=3 -P &quot;You have been mausezahned.&quot; -A 10.1.1.109 -B 192.168.7.7
+</pre>
+<p>See <tt class="docutils literal"><span class="pre">mz</span> <span class="pre">-t</span> <span class="pre">syslog</span> <span class="pre">help</span></tt> for more details.</p>
+</div>
+</div>
+<div class="section" id="dear-users">
+<h1><a class="toc-backref" href="#id25">7&nbsp;&nbsp;&nbsp;Dear users</a></h1>
+<p>Mausezahn is still under heavy development and you may expect new features
+very soon.</p>
+<p><strong>Please report</strong> to <em>herbert AT perihel DOT at</em> regarding:</p>
+<blockquote>
+<ul class="simple">
+<li>Bugs</li>
+<li>Important features you miss</li>
+<li>How you used Mausezahn (I am really interested in practical problems)</li>
+<li>Interesting observations with Mausezahn at the network</li>
+</ul>
+</blockquote>
+</div>
+</div>
+</body>
+</html>

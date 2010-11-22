@@ -1,0 +1,308 @@
+version 0.40
+============
+2010-07-07
+
+Important bugfixes and some interesting new features:
+
+- Configured packets can now be grouped to 'packet sequences', optionally with
+  additional delays between each packet chain. Use the 'sequence' command to
+  enter the sequence configuration mode. Only in interactive mode.
+- IP auto-fragmentation is now supported in interactive mode. For every IP-based
+  packet you can configure a 'fragment-size' and optionally a 'fragment-
+  overlap'. 
+- Direct mode, jitter measurements: Now uses consistently the ssrc option to
+  distinguish different RTP streams. 
+- Corrected PVST+ spanning tree packets in both direct and interactive mode
+  (and exhaustively tested). 
+- Direct mode: Loose Source Route option works now correctly (tested it in
+  Cisco network).
+- Interactice mode: 'start' command has been renamed to 'run'. Also improved 
+  packet selection with this command, using IDs or names. Also sequences can
+  be started that way.
+- Lots of bugfixes, more and less critical.
+
+
+
+version 0.39
+============
+2010-03-07
+
+This is basically a stable version with a few more features. Everybody should
+use only this version and not one of the previous!
+
+- Fixed 100% CPU-consumption bug, occurring when Mausezahn is used in
+  interactive mode or RTP-measurement mode and the system has a recent
+  libpcap-dev library.
+- Added RTP support in MOPS.
+- Improved RTP measurement mode (more efficient, some bugs fixed, internally
+  nanosecond resolution for future and hi-end machines).
+- Fixed sporadic clean-up bugs (NULL-pointer verification).
+- Updated man pages.
+
+
+version 0.38
+============
+2009-12-24
+
+Mausezahn now supports a multi-threaded mode with Cisco-style command line. 
+Try e. g. "mz -x 99" and telnet to port 99. This mode utilizes a new protocol
+and packet management framework called MOPS (Mausezahn's Own Packet System).
+From now on all new features are added to MOPS. 
+
+This is a X-mas release and should be considered beta (although the legacy
+part should be much more stable and cleaner than the version 0.34.9 and the
+new MOPS part has been already tested somewhat...). PLEASE send be bug
+reports! 
+
+Known bugs:
+
+Due to a libpcap-problem (I assume) Mausezahn runs quite unstable
+under Ubuntu 9.10 (100% CPU consumption in MOPS mode, segfaults upon
+termination, unbounded numbers in jitter measurement mode...). Interestingly
+no problems when running under Debian 5.0 or Ubuntu 8.04. 
+
+Changelog: (only the most important)
+
+- Added basic support for IGMP (v1, v2), querier and client mode (currently
+  only TX, no RX). (MOPS)
+- Added basic LLDP support (MOPS). Also supports 'bad' TLV creation.
+- Multi-device support (MOPS).
+- Support for nanosecond inter-packet delays (MOPS). The CLI now allows to 
+  configure inter-packet delay in units hour, min, sec, msec, usec, and nsec.
+- Support for greater transmission intervals.
+- FIXED simulation mode; -V is now only the extended verbose mode and the new
+  switch -S enables the simulation mode (i. e. nothing is sent).
+- Support for automatic L2-multicast addresses when L3 address is multicast
+  (MOPS).
+- Added 'launch' commands for easier handling of usual tasks. (Currently only
+  synflood and BPDU).
+- Added ARP observation service; this can be also used to detect malicious ARP
+  tricks on the LAN, e. g. ARP cache poisoning attacks.
+- Improved IP range configuration in legacy code.
+- Support for independent measurements of concurrent RTP streams (as part
+  of legacy code). Now each RTP stream can be assigned an arbitrary ID.
+  This solution is easier to handle (than IP-based) an NAT-independent.
+- Added -r option for randomized interpacket delay.
+- Prettier rtp measurement outputs via 'bar' (default) and 'txt' commands.
+- More precise RTP jitter measurements now.
+- Added 'bar' and 'txt' option for rtp jitter measurements.
+- Migrated BPDU to mops.
+- The -t option (protocol type) is now case insensitive for subsequent
+  protocol commands. 
+- Support for central mausezahn configuration file (/etc/mausezahn/mz.cfg)
+  containing username, password, enable, etc. In case the config file is
+  not present Mausezahn uses default credentials (user: mz, password: mz,
+  enable: mops).
+- Better cleanup when aborting; fixed clean_up function to also clean-up 
+  mops list
+- Legacy code: Protocol command string is now case insensitive.
+- Fixed str2hex function (potential stack smashing threat)
+
+
+
+
+version 0.37
+============
+(not officially released)
+
+- Command 'clear all' now removes all packets except a plain init packet
+- Added command 'clear packet' to remove a specific packet
+- Added command 'reset packet' to re-initialize all data of a MOPS entry
+- Changed mops id to u_int32_t
+- Added 'load' command to load and run a config file 
+- Added 'launch' command to easily start predefined packet processes
+- #defined MZ_DEFAULT_CONFIG_PATH "/etc/mausezahn/" which is now the default 
+  location for the global config file (with passwords and other things)
+- #defined MZ_DEFAULT_LOG_PATH "/var/log/mausezahn/" which is now the default
+  location for any dynamically created files such as logs and packet captures. 
+- Fixed limits check for strtoul and strtoull in str2int (etc) in tools.c.
+
+
+version 0.36
+============
+(not officially released)
+
+- Added lots of new commands compared with version 0.35. (Too much to list here)
+- Changed MOPS architecture from array to doubly linked list. (Code release
+  'Cyanistes caeruleus' - all mops versions will be named after cute birds)
+- Multi-threaded packet generation.
+- Added full support for 802.1Q and MPLS (arbitrary number of tags)
+- Migrated ARP, IP (no options), UDP, and TCP (stateless) to MOPS
+  
+
+version 0.35 
+============
+(not officially released)
+
+- Added interactive (Cisco-style) commandline interface: Start Mausezahn with
+  the -x option (optionally specify port number, default is 25542) and then
+  Mausezahn accepts incoming Telnet connections. Currently this CLI should be
+  considered experimental.
+- Allow arbitrary (user-defined) variable fields within frames (multi-precision
+  counters).
+- Fixed automatic device detection bugs if vmware interfaces are present. Also
+  a bug that prevents choosing the loopback interface on some systems has been
+  fixed.
+- Ascii payloads can now be specified in a file which is specified by the new
+  option-f <filename>.
+- Hexadecimal payloads can no be specified in a file which is specified by the
+  new option -F <filename>.
+- To improve usage consistency, added 'help' argument also for the 802.1Q
+  option, that is, also  '-Q help' is now possible (as with many other options). 
+
+
+
+version 0.34.7
+==============
+2009-07-27
+
+- RTP packet drop count and disorder count (the number of permutations
+  needed to regain the correct sequence) are not only printed on the 
+  CLI but also in the 9th and 10th columns of the log file.
+- Added RTP jitter estimation as specified in RFC3550 (smoothed mean deviation). 
+  This value is printed on the CLI and in the 5th column of the rtp log-file.
+- Fixed -V option with raw layer-2 frames (simulation mode).
+- Fixed padding (-p) option (segfault when number too big)
+- Fixed some potential stack overflow issues (thanks Vivek!)
+
+
+version 0.34.6
+==============
+2008-12-10
+
+- Added the IP arguments df (don't fragment), mf (more fragments), and rf
+  (reserved flag). This makes it easier to build fragmented packets.
+  
+
+version 0.34.5
+==============
+2008-10-30
+
+- Added RTP packet drop count and disorder count (the number of permutations
+  needed to regain the correct sequence). These values are printed on the 
+  CLI.
+- Fixed usage of ranges even when no payload is specified; previously Mausezahn
+  had problems with that; error messages include:
+   a)  mz/update_DPORT: Can't build TCP header: libnet_build_tcp(): payload
+       inconsistency
+   b)  mz/update_IP_DA: IP address manipulation failed!
+  or similar.
+- Updated the INSTALL file.
+
+
+
+version 0.34.1
+==============
+2008-10-08
+
+- Mausezahn now checks system clock precision and chooses monotonic nanosecond
+  clock if available or alternative clock otherwise. No nasty warning message 
+  should occur anymore.
+
+
+
+version 0.34
+============
+2008-09-24
+
+- Replaced gettimeofday() with the clock_gettime(CLOCK_MONOTONIC) which does
+  not jump when the system syncs via NTP (otherwise artefacts would occur in
+  long-term jitter-measurement data; additionally nanosecond precision is 
+  (internally) supported, although it is not really required).
+- Added IP options 'Loose Source Route' and 'Strict Source Route', as well as
+  the possibility to specify any IP option as hexadecimal string.
+- IP packets can now be sent without any payload (previously at least a single
+  payload byte has been added)
+- Added -V option (extended verbose) which prints only frame details but does
+  not put anything on the wire.
+- Added icmp option echo request (ping), echo reply (default), and unreachable.
+  Also made some clean-ups here.
+
+
+version 0.33.2
+==============
+2008-09-11
+
+- RTP packets are now (at least more) standard conform. Now Mausezahn per
+  default simulates a G.711 codec with 20 msec inter-packet delay and 160 bytes 
+  payload. The usage of the timestamps should be correct now so that other
+  applications can also interprete Mausezahn's RTP header.
+- Added 8 byte padding to BPDU packets (some switches rejected the packet; now
+  whole frame is always 60 bytes long (added 8 zero bytes or 4 for PVST+,
+  respectively).
+- Fixed PVST+ packet format. Should be correct now; can be sent with (default)
+  or without 802.1Q tag.
+- Better help text for BPDU mode.
+- Added 'pvst' as additional keyword for specification of MAC addresses
+
+
+version 0.33.1
+==============
+2008-09-04
+
+- Upon startup Mausezahn checks if it has root privileges (getuid, geteuid)
+- 'Cleaned' the files README, INSTALL, and AUTHORS, fixed some missing information
+  and applied a line wrap at 80 chars to comply with packaging requirements.
+- Also made a 80-char line-wrap in the source code's license statement.
+
+
+version 0.33 
+============
+2008-08-20
+
+- Clearly defined GPLv2 as license.
+- Support for the Syslog protocol.
+- Inclusion of cmake for easier build process.
+- Some minor bugfixes, e. g. now "mz -t help" works (before you had to enter 
+  "mz eth0 -t help").
+
+Thanks to Cristian Greco, Steve Grubb, Rauno Tuul, and Heinz Wiesinger for help
+and feedback.
+
+
+
+
+================================================================================
+
+Since I was too lazy to maintain a changelog before version 0.32 let
+me summarize at least all features and possible bugs at this point:
+
+*) Full support for the following protocols:
+
+    - ARP
+    - BPDU (PVST+)
+    - CDP
+    - UDP
+    - TCP (only transmission, no state machine so far)
+    - DNS 
+    
+*) Limited support:
+
+    - ICMP (started to implement ICMP redirects, did not had time for
+            tests so far; almost sure buggy)
+	    
+    - RTP  (only needed for jitter measurements, the timestamps used
+            are quite proprietary (sec and msec separately))
+
+*) Other features
+
+    - can send arbitrary byte sequences longer or equal 15 bytes
+    - randomized MAC and/or IP addresses
+    - ranges for IP addresses, port numbers, TCP sequence numbers
+    - 802.1Q VLAN tags (arbitrary depth) plus CoS values
+    - MPLS tags (arbitrary depth) plus CoS and TTL values
+    - automatic padding if desired
+    - inter-packet delays in usec (but can also be specified in msec
+      and sec)
+    - text or hex payloads 
+    - RTP receiving mode to measure jitter with high precision (usec
+      is base, plan to measure true precision empirically, I guess
+      it is at least below 1 msec)
+
+*) Possible bugs
+
+    - Limited checks for wrong arguments and options (however, I
+      tried to avoid buffer overflows, mostly)
+      
+    - ICMP packets (redirects) may be incorrect (I had no use for
+      those so far)

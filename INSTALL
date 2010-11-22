@@ -1,0 +1,49 @@
+
+REQUIREMENTS
+============
+
+You need the following packages on your system:
+
+* cmake
+* libpcap0.8-dev  (version >= 0.8 will definitely work)
+* libnet1-dev     (version >= 1.1 will definitely work)
+* libcli-dev      (version >= 1.9.1 will work)
+
+BUILD PROCESS
+=============
+
+Then simply run
+
+  cmake .
+
+Don't forget the period in this command. This which will create a Makefile for
+your system. Cmake allows you to specify optional variables here, for example
+for another install location use cmake . -DCMAKE_INSTALL_PREFIX=/path
+
+
+Once this Makefile has been created, enter
+
+  make
+  
+and the executable binary 'mz' should be available in the
+'src' directory.
+
+
+INSTALLATION
+============
+
+Finally install the binary automatically on the right place:
+
+  make install
+  
+To specify another location see the comment above.
+
+
+OTHER ISSUES
+============
+
+* Try out 'make help' to see all other targets.
+
+* To use the view_rtp_avg.py program (to visualize jitter data) you must 
+  install the matplotlib package for Python.
+

@@ -1,0 +1,8 @@
+/usr/local/sbin/mz
+/usr/local/share/man/man1/mz.1
+/usr/local/share/man/man1/mz.cfg.1
+/usr/local/share/doc/mz/mzguide.html
+/usr/local/share/doc/mz/mops.html
+/usr/local/share/doc/mz/view_rtp_avg.py
+/usr/local/share/doc/mz/example_lldp.conf
+/usr/local/share/doc/mz/README.example

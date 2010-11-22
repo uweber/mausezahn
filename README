@@ -1,0 +1,115 @@
+What is Mausezahn?
+==================
+
+Mausezahn is a free fast traffic generator written in C which allows you to
+send nearly every possible and impossible packet. It is mainly used to test
+VoIP or multicast networks but also for security audits to check whether your
+systems are hardened enough for specific attacks. Mausezahn can be used for
+example:
+
+    * As traffic generator (e. g. to stress multicast networks)
+    * To precisely measure jitter (delay variations) between two hosts (e. g.
+      for VoIP-SLA verification)
+    * As didactical tool during a datacom lecture or for lab exercises
+    * For penetration testing of firewalls and IDS
+    * For DoS attacks on networks (for audit purposes of course)
+    * To find bugs in network software or appliances
+    * For reconnaissance attacks using ping sweeps and port scans
+    * To test network behaviour under strange circumstances (stress test, 
+      malformed packets, ...)
+
+...and more. Mausezahn is basically a versatile packet creation tool on the
+command line with a simple syntax and context help. It could also be used
+within (bash-) scripts to perform combination of tests.
+
+Currently Mausezahn is only available for Linux platforms. There are no plans
+for a Windows version and please do NOT PORT Mausezahn to Windows!
+
+
+Quick Introduction
+==================
+
+-----------------------------------------------------------------------------
+NOTE: Since version 0.38 there is also an 'interactive mode' with more and
+advanced features. Below, only the legacy 'direct mode' is explained.
+Please consult  mops.html in /usr/share/mz/ or http://www.perihel.at/sec/mz/ 
+for more information about this interactive mode.
+-----------------------------------------------------------------------------
+
+Let me give you a quick example to demonstrate how simple it is to work with
+Mausezahn. Please note that you must have root rights.
+
+▶ Send an arbitrary sequence of bytes through your network card 1000 times:
+
+# mz eth0 -c 1000 \
+  "ff:ff:ff:ff:ff:ff ff:ff:ff:ff:ff:ff cc:dd 00:00:00:ca:fe:ba:be"
+
+Note that this 'frame' is (by intention) completely invalid with respect to the
+Ethernet standard; the frame is too short (called a 'runt') and has a broadcast
+source address.
+
+▶ But you can send more complex packets easily with the built-in packet
+builders using the -t option. Let's send a forged DNS response to host
+192.168.1.2 by impersonating the DNS server 10.7.7.42:
+
+# mz eth0  -A 10.7.7.42 -B 192.168.1.2 \ 
+  -t dns "q=www.thehostyouseek.com, a=172.16.6.66"
+
+Of course you can manipulate much more in the DNS header, simply type mz -t dns
+help for additional help.
+
+▶ Perform a TCP SYN-Flood attack against all hosts in subnet 10.5.5.0/24 which
+are in VLAN 100. Try out all 1023 well-known ports. Provided that you are in
+the native VLAN 50 you can reach the target via VLAN-hopping. Repeat the whole
+attack endlessly by setting the count option to zero:
+
+# mz eth0 -c 0 -Q 50,100 -A rand -B 10.5.5.0/25 -t tcp "flags=syn, dp=1-1023"
+
+▶ Confuse the spanning tree: Behave like a root bridge and generate BPDUs with
+lowest Bridge ID every two seconds:
+
+# mz eth0 -c 0 -d 2s -t bpdu 
+
+As you see you don't even need to specify any other BPDU parameters because
+Mausezahn assumes that your PC wants to be the root per default. Of course you
+can modify every BPDU parameter. Event the Cisco-proprietary per-vlan spanning
+tree PVST+ is supported:
+
+# mz eth0 -c 0 -d 2s -t bpdu vlan=314
+
+▶ Voice over IP connections suffer from jitter (delay variations). Hence it is
+important to know the jitter across a given path. Using Mausezahn you can
+precisely measure the jitter continuously. Simply configure a Mausezahn sender
+and a receiver:
+
+TX# mz eth0 -t rtp -B rx.somewhere.net
+RX# mz eth0 -T rtp "log, path=/tmp"
+
+Using these settings, the sender (TX) sends RTP packets every 30 msec to the
+specified receiver (RX). Station RX stores moving average data in
+/tmp/rtp_avg_20080801-120233 (filename is current timestamp). The data is a
+comma seperated list that can be easily analyzed and visualized with standard
+tools, e. g. R, Matlab, Octave, or this python tool (which needs the
+matplotlib). 
+
+
+Supported Packet Types
+======================
+
+For a list of all current supported packet types please enter
+
+# mz -t help
+
+
+Disclaimer and License
+======================
+
+Mausezahn is basically a network and firewall testing tool. Don't use this
+tool when you are not aware of its consequences or have only little knowledge
+aqbout networks and data communication. If you abuse Mausezahn for
+unauthorized attacks and get caught, or damage something of your own, then
+this is completely your fault.
+
+Mausezahn (C)2008-2010 by Herbert Haas is licensed under the GNU Public
+License (GPL) version 2. See the file COPYING for a license definition or
+http://www.gnu.org/licenses/gpl-2.0.txt

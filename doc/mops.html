@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Mausezahn User's Guide</title>
+<meta name="author" content="Herbert Haas" />
+<meta name="date" content="2010-02-10" />
+<meta name="copyright" content="Copyright (c) 2007-2009 by Herbert Haas." />
+<style type="text/css">
+
+@import url(html4css1.css);
+
+body {
+  font: 90% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: black;
+  margin: 2em;
+  padding: 2em;
+}
+
+a[href] {
+  color: #436976;
+  background-color: transparent;
+}
+
+a.toc-backref {
+  text-decoration: none;
+}
+
+h1 a[href] {
+  text-decoration: none;
+  color: #ff7e00;
+  background-color: transparent;
+}
+
+a.strong {
+  font-weight: bold;
+}
+
+img {
+  margin: 0;
+  border: 0;
+}
+
+p {
+  margin: 0.5em 0 1em 0;
+  line-height: 1.5em;
+}
+p a {
+  text-decoration: underline;
+}
+p a:visited {
+  color: purple;
+  background-color: transparent;
+}
+p a:active {
+  color: red;
+  background-color: transparent;
+}
+a:hover {
+  text-decoration: none;
+}
+p img {
+  border: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #003a6b;
+  background-color: transparent;
+  font: 100% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding-top: 0.5em;
+}
+
+h1 {
+  font-size: 180%;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #ff7e00;
+}
+h2 {
+  font-size: 140%;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #aaa;
+}
+h3 {
+  font-size: 130%;
+  margin-bottom: 0.5em;
+}
+h4 {
+  font-size: 110%;
+  font-weight: bold;
+}
+h5 {
+  font-size: 100%;
+  font-weight: bold;
+}
+h6 {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+ul a, ol a {
+  text-decoration: underline;
+}
+
+dt {
+  font-weight: bold;
+}
+dt a {
+  text-decoration: none;
+}
+
+dd {
+  line-height: 1.5em;
+  margin-bottom: 1em;
+}
+
+legend {
+  background: #ffffff;
+  padding: 0.5em;
+}
+
+form {
+  margin: 0;
+}
+
+
+dl.form {
+  margin: 0;
+  padding: 1em;
+}
+
+dl.form dt {
+  width: 30%;
+  float: left;
+  margin: 0;
+  padding: 0 0.5em 0.5em 0;
+  text-align: right;
+}
+
+input {
+  font: 100% 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+  color: black;
+  background-color: white;
+  vertical-align: middle;
+}
+
+abbr, acronym, .explain {
+  color: black;
+  background-color: transparent;
+}
+
+q, blockquote {
+}
+
+code, pre {
+  font-family: monospace;
+  font-size: 1.2em;
+  display: block;
+  padding: 10px;
+  border: 1px solid #838183;
+  background-color: #eee;
+  color: #000;
+  overflow: auto;
+  margin: 0.5em 1em;
+}
+
+tt.docutils {
+  background-color: #eeeeee;
+}
+
+
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+  
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+    
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+</style>
+</head>
+<body>
+<div class="document" id="mausezahn-user-s-guide">
+<h1 class="title">Mausezahn User's Guide</h1>
+<h2 class="subtitle" id="part-two-interactive-mode-mops">Part Two - Interactive Mode (MOPS)</h2>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Herbert Haas</td></tr>
+<tr><th class="docinfo-name">Address:</th>
+<td><pre class="address">
+herbert AT perihel DOT at
+<a class="last reference external" href="http://www.perihel.at/sec/mz">http://www.perihel.at/sec/mz</a>
+</pre>
+</td></tr>
+<tr><th class="docinfo-name">Revision:</th>
+<td>0.38.1</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2010-02-10</td></tr>
+<tr><th class="docinfo-name">Copyright:</th>
+<td>Copyright (c) 2007-2009 by Herbert Haas.</td></tr>
+</tbody>
+</table>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="#note" id="id1">1&nbsp;&nbsp;&nbsp;Note</a></li>
+<li><a class="reference internal" href="#what-is-mausezahn" id="id2">2&nbsp;&nbsp;&nbsp;What is Mausezahn?</a></li>
+<li><a class="reference internal" href="#disclaimer-and-license" id="id3">3&nbsp;&nbsp;&nbsp;Disclaimer and License</a></li>
+<li><a class="reference internal" href="#first-steps" id="id4">4&nbsp;&nbsp;&nbsp;First steps</a></li>
+<li><a class="reference internal" href="#defining-packets" id="id5">5&nbsp;&nbsp;&nbsp;Defining packets</a><ul class="auto-toc">
+<li><a class="reference internal" href="#general-packet-options" id="id6">5.1&nbsp;&nbsp;&nbsp;General packet options</a></li>
+<li><a class="reference internal" href="#configuring-protocol-types" id="id7">5.2&nbsp;&nbsp;&nbsp;Configuring protocol types</a></li>
+<li><a class="reference internal" href="#configuring-a-greater-interval" id="id8">5.3&nbsp;&nbsp;&nbsp;Configuring a greater interval</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#load-prepared-configurations" id="id9">6&nbsp;&nbsp;&nbsp;Load prepared configurations</a></li>
+<li><a class="reference internal" href="#what-s-next" id="id10">7&nbsp;&nbsp;&nbsp;What's next?</a></li>
+<li><a class="reference internal" href="#dear-users" id="id11">8&nbsp;&nbsp;&nbsp;Dear users</a></li>
+</ul>
+</div>
+<div class="section" id="note">
+<h1><a class="toc-backref" href="#id1">1&nbsp;&nbsp;&nbsp;Note</a></h1>
+<p>This User's Guide explains Mausezahn's <strong>interactive mode</strong> relying on
+<em>Mausezahn's Own Packet System</em> (MOPS). Most new and all more sophisticated
+features are implemented inside this subsystem. MOPS provides an interactive
+command line interface (similar as the famous Cisco CLI) and is
+multi-threaded, allowing you to create an arbitrary number of transmission and
+scanning process(es).</p>
+<p>The legacy mode aka <em>direct mode*</em> (which allows you to create frames and
+packets right from the Linux command line) is still supported and is described
+in <a class="reference external" href="http://www.perihel.at/sec/mz/mzguide.html">this document</a>.</p>
+</div>
+<div class="section" id="what-is-mausezahn">
+<h1><a class="toc-backref" href="#id2">2&nbsp;&nbsp;&nbsp;What is Mausezahn?</a></h1>
+<p>Mausezahn is a <strong>fast traffic generator</strong> written in C which allows you to
+send nearly every possible and impossible packet. Mausezahn can be used for
+example</p>
+<blockquote>
+<ul class="simple">
+<li>As traffic generator (e. g. to stress multicast networks)</li>
+<li>For penetration testing of firewalls and IDS</li>
+<li>For DoS attacks on networks (for audit purposes of course)</li>
+<li>To find bugs in network software or appliances</li>
+<li>For reconnaissance attacks using ping sweeps and port scans</li>
+<li>To test network behaviour under strange circumstances (stress test, malformed packets, ...)</li>
+<li>As didactical tool during lab exercises</li>
+</ul>
+</blockquote>
+<p>...and more. Mausezahn is basically a versatile packet creation tool on the
+command line with a simple syntax and online help. It could also be used
+within (bash-) scripts to perform combination of tests.</p>
+<p>Currently Mausezahn is only available for Linux (and other UNIX-like)
+platforms. There will be no Windows version.</p>
+</div>
+<div class="section" id="disclaimer-and-license">
+<h1><a class="toc-backref" href="#id3">3&nbsp;&nbsp;&nbsp;Disclaimer and License</a></h1>
+<p>Mausezahn is basically a traffic generator as well as a network and firewall
+testing tool.  Don't use this tool when you are not aware of its consequences
+or have only little knowledge about networks and data communication. If you
+abuse Mausezahn for unallowed attacks and get caught, or damage something of
+your own, then this is completely your fault.</p>
+<p>Since version 0.33 Mausezahn is licensed under <a class="reference external" href="http://www.gnu.org/licenses/gpl-2.0.html">GPLv2</a></p>
+</div>
+<div class="section" id="first-steps">
+<h1><a class="toc-backref" href="#id4">4&nbsp;&nbsp;&nbsp;First steps</a></h1>
+<p>Using the interactive mode requires to start Mausezahn as server:</p>
+<pre class="literal-block">
+# mz -x
+</pre>
+<p>Now you can Telnet to that server using the default port number 25542, but
+also an arbitrary port number can be specified:</p>
+<pre class="literal-block">
+# mz -x 99
+Mausezahn accepts incoming Telnet connections on port 99.
+mz: Problems opening config file. Will use defaults
+</pre>
+<p>Either from another terminal or from another host try to Telnet to the
+Mausezahn server:</p>
+<pre class="literal-block">
+harpo$ telnet groucho 99
+Trying 192.168.0.4...
+Connected to groucho.
+Escape character is '^]'.
+
+------------------------------------------
+Mausezahn, version 0.38
+Copyright (C) 2007-2009 by Herbert Haas.
+------------------------------------------
+
+Mausezahn comes with ABSOLUTELY NO WARRANTY; for details
+type 'warranty'.  This is free software, and you are welcome
+to redistribute it under certain conditions; see COPYING
+(included in the Mausezahn source package) for details.
+
+For Mausezahn NEWS visit http://www.perihel.at/sec/mz/
+
+
+
+Username: mz
+Password: mz
+
+mz-0.38&gt; enable
+Password: mops
+mz-0.38#
+</pre>
+<p>It is recommended to configure your own login credentials in
+<strong>/etc/mausezahn/mz.cfg</strong>, such as:</p>
+<pre class="literal-block">
+user = herbert
+password = TopSecret
+enable = MauseZa#n42
+</pre>
+<p>Since you reached the Mausezahn prompt, lets try some first commands. You can
+use the '?' character at any time for a contect-sensitive help.</p>
+<p>First try out the <strong>show</strong> command:</p>
+<blockquote>
+<dl class="docutils">
+<dt>mz-0.38# show ?</dt>
+<dd>packet               Show defined packets
+interfaces           Show detailed interface information
+mops                 Show MOPS details
+set                  List general packet parameters
+arp                  Show the advanced Mausezahn ARP table
+license              Show license and warranty details</dd>
+</dl>
+</blockquote>
+<p>Mausezahn maintains its own ARP table and observes anomalies. There is an
+entry for every physical interface (however this host has only one):</p>
+<pre class="literal-block">
+mz-0.38# sh arp
+Intf    Index     IP address     MAC address       last       Ch  UCast BCast Info
+----------------------------------------------------------------------------------
+eth0    [1] D     192.168.0.1  00:09:5b:9a:15:84  23:44:41     1     1     0  0000
+</pre>
+<p>The column <strong>Ch</strong> tells us that the announced MAC address has only changed one
+time (= when it was learned). The columns <strong>Ucast</strong> and <strong>BCast</strong> tell us how
+often this entry was announced via unicast or broadcast respectively.</p>
+<p>Let's check our interfaces:</p>
+<pre class="literal-block">
+mz-0.38# show interface
+Available network interfaces:
+
+               real             real                  used (fake)      used (fake)
+ device        IPv4 address     MAC address           IPv4 address     MAC address
+---------------------------------------------------------------------------------------
+&gt; eth0         192.168.0.4      00:30:05:76:2e:8d     192.168.0.4      00:30:05:76:2e:8d
+  lo           127.0.0.1        00:00:00:00:00:00     127.0.0.1        00:00:00:00:00:00
+
+2 interfaces found.
+Default interface is eth0.
+</pre>
+</div>
+<div class="section" id="defining-packets">
+<h1><a class="toc-backref" href="#id5">5&nbsp;&nbsp;&nbsp;Defining packets</a></h1>
+<p>Let's check the current packet list:</p>
+<pre class="literal-block">
+mz-0.38# sh packet
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName           Layers  Proto    Size  State      Device      Delay       Count/CntX
+
+    1  sysARP_servic...  E-----  ARP        60  config     lo          100 msec        1/0 (100%)
+
+1 packets defined, 0 active.
+</pre>
+<p>We notice that there is already one system-defined packet process; it has been
+created and used only once (during startup) by Mausezahn's ARP service.
+Currently its state is <strong>config</strong> which means that the process is sleeping.</p>
+<div class="section" id="general-packet-options">
+<h2><a class="toc-backref" href="#id6">5.1&nbsp;&nbsp;&nbsp;General packet options</a></h2>
+<p>Now let's create our own packet process and therefore switch into the <strong>global
+configuration mode</strong>:</p>
+<pre class="literal-block">
+mz-0.38# configure term
+
+mz-0.38(config)# packet
+Allocated new packet PKT0002 at slot 2
+
+mz-0.38(config-pkt-2)# ?
+...
+name                 Assign a unique name
+description          Assign a packet description text
+bind                 Select the network interface
+count                Configure the packet count value
+delay                Configure the inter-packet delay
+interval             Configure a greater interval
+type                 Specify packet type
+mac                  Configure packet's MAC addresses
+tag                  Configure tags
+payload              Configure a payload
+port                 Configure packet's port numbers
+end                  End packet configuration mode
+ethernet             Configure frame's Ethernet, 802.2, 802.3, or SNAP settings
+ip                   Configure packet's IP settings
+udp                  Configure packet's UDP header parameters
+tcp                  Configure packet's TCP header parameters
+</pre>
+<p>Here are a lot of options but normally you only need a few of them. When you
+configure lots of different packets you might assign a reasonable name and
+description for them:</p>
+<pre class="literal-block">
+mz-0.38(config-pkt-2)# name Test
+mz-0.38(config-pkt-2)# desc This is just a test
+</pre>
+<p>You can e. g. change the default settings for the source and destination
+MAC/IP addresses using the <strong>mac</strong> and <strong>ip</strong> commands:</p>
+<pre class="literal-block">
+mz-0.38(config-pkt-2)# ip address dest 10.1.1.0 /24
+mz-0.38(config-pkt-2)# ip addr source random
+</pre>
+<p>In the example above we configured a range of addresses (all hosts in the
+network 10.1.1.0 should be addressed). Additionally we spoof our source IP
+address.</p>
+<p>Of course We can add one or more VLAN and/or MPLS tag(s):</p>
+<pre class="literal-block">
+mz-0.38(config-pkt-2)# tag ?
+  dot1q                Configure 802.1Q (and 802.1P) parameters
+  mpls                 Configure MPLS label stack
+
+mz-0.38(config-pkt-2)# tag dot ?
+Configure 802.1Q tags:
+
+  VLAN[:CoS] [VLAN[:CoS]] ...   The leftmost tag is the outer tag in the frame
+  remove &lt;tag-nr&gt; | all         Remove one or more tags (&lt;tag-nr&gt; starts with 1),
+                                by default the first (=leftmost,outer) tag is removed,
+                                keyword 'all' can be used instead of tag numbers.
+  cfi | nocfi [&lt;tag-nr&gt;]        Set or unset the CFI-bit in any tag (by default
+                                assuming the first tag).
+
+
+mz-0.38(config-pkt-2)# tag dot 1:7 200:5
+</pre>
+<p>Configure <strong>count</strong> and <strong>delay</strong>:</p>
+<pre class="literal-block">
+mz-0.38(config-pkt-2)# count 1000
+
+mz-0.38(config-pkt-2)# delay ?
+delay &lt;value&gt; [hour | min | sec | msec | usec | nsec]
+
+Specify the inter-packet delay in hours, minutes, seconds, milliseconds,  microseconds,
+or nanoseconds. The default unit is milliseconds (i. e. when no unit is given).
+
+
+mz-0.38(config-pkt-2)# delay 1 msec
+Inter-packet delay set to 0 sec and 1000000 nsec
+
+
+mz-0.38(config-pkt-2)#
+</pre>
+</div>
+<div class="section" id="configuring-protocol-types">
+<h2><a class="toc-backref" href="#id7">5.2&nbsp;&nbsp;&nbsp;Configuring protocol types</a></h2>
+<p>Mausezahn's <em>interactive mode</em> supports a growing list of protocols and only
+relies on the MOPS architecture (and not on libnet as it is the case with the
+legacy <em>direct mode</em>):</p>
+<pre class="literal-block">
+mz-0.38(config-pkt-2)# type
+Specify a packet type from the following list:
+
+ arp
+ bpdu
+ igmp
+ ip
+ lldp
+ tcp
+ udp
+
+mz-0.38(config-pkt-2)# type tcp
+
+mz-0.38(config-pkt-2-tcp)#
+....
+seqnr                Configure the TCP sequence number
+acknr                Configure the TCP acknowledgement number
+hlen                 Configure the TCP header length
+reserved             Configure the TCP reserved field
+flags                Configure a combination of TCP flags at once
+cwr                  Set or unset the TCP CWR flag
+ece                  Set or unset the TCP ECE flag
+urg                  Set or unset the TCP URG flag
+ack                  set or unset the TCP ACK flag
+psh                  set or unset the TCP PSH flag
+rst                  set or unset the TCP RST flag
+syn                  set or unset the TCP SYN flag
+fin                  set or unset the TCP FIN flag
+window               Configure the TCP window size
+checksum             Configure the TCP checksum
+urgent-pointer       Configure the TCP urgend pointer
+options              Configure TCP options
+end                  End TCP configuration mode
+
+
+mz-0.38(config-pkt-2-tcp)# flags syn fin rst
+Current setting is: --------------------RST-SYN-FIN
+
+
+mz-0.38(config-pkt-2-tcp)# end
+mz-0.38(config-pkt-2)# paylo ascii This is a dummy payload for my first packet
+mz-0.38(config-pkt-2)# end
+</pre>
+<p>Now configure another packet, for example let's assume we want an LLDP process:</p>
+<pre class="literal-block">
+mz-0.38(config)# packet
+Allocated new packet PKT0003 at slot 3
+
+mz-0.38(config-pkt-3)# ty lldp
+mz-0.38(config-pkt-3-lldp)# exit
+mz-0.38(config)# exit
+</pre>
+<p>In the above example we only use the default LLDP settings and don't configure
+further LLDP options or TLVs.</p>
+<p>Back in the top level of the CLI let's verify what we had done:</p>
+<pre class="literal-block">
+mz-0.38# sh pa
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName            Layers  Proto    Size  State      Device   Delay      Count/CntX
+   1   sysARP_servic...   E-----  ARP        60  config     lo       100 msec       1/0 (100%)
+   2   Test               E-Q-IT            125  config     eth0    1000 usec    1000/1000 (0%)
+   3   PKT0003            E-----  LLDP       36  config     eth0      30 sec        0/0 (0%)
+
+3 packets defined, 0 active.
+</pre>
+<p>The column <strong>Layers</strong> indicates which major protocols have been combined. For example the
+packet with packet-id 2 (&quot;Test&quot;) utilizes Ethernet (E), IP (I), and TCP (T). Additionally an
+802.1Q tag (Q) has been inserted.</p>
+<p>Now <strong>start</strong> one of these packet processes:</p>
+<pre class="literal-block">
+mz-0.38# start slot 3
+Activate [3]
+
+mz-0.38# sh pac
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName            Layers  Proto    Size  State      Device   Delay      Count/CntX
+   1   sysARP_servic...   E-----  ARP        60  config     lo       100 msec       1/0 (100%)
+   2   Test               E-Q-IT            125  config     eth0    1000 usec    1000/1000 (0%)
+   3   PKT0003            E-----  LLDP       36  config     eth0      30 sec        0/1 (0%)
+
+3 packets defined, 1 active.
+</pre>
+<p>Let's have a more detailed look at a specific packet process:</p>
+<pre class="literal-block">
+mz-0.38# sh pac 2
+Packet [2] Test
+Description: This is just a test
+State: config, Count=1000, delay=1000 usec (0 s 1000000 nsec), interval= (undefined)
+Headers:
+ Ethernet: 00-30-05-76-2e-8d =&gt; ff-ff-ff-ff-ff-ff  [0800 after 802.1Q tag]
+ Auto-delivery is ON (that is, the actual MAC is adapted upon transmission)
+ 802.1Q: 0 tag(s);  (VLAN:CoS)
+ IP:  SA=192.168.0.4 (not random) (no range)
+      DA=255.255.255.255 (no range)
+      ToS=0x00  proto=17  TTL=255  ID=0  offset=0  flags: -|-|-
+      len=49664(correct)  checksum=0x2e8d(correct)
+ TCP: 83 bytes segment size (including TCP header)
+      SP=0 (norange) (not random), DP=0 (norange) (not random)
+      SQNR=3405691582 (start 0, stop 4294967295, delta 0) -- ACKNR=0 (invalid)
+      Flags: ------------------------SYN----, reserved field is 00, urgent pointer= 0
+      Announced window size= 100
+      Offset= 0 (times 32 bit; value is valid), checksum= ffff (valid)
+      (No TCP options attached) - 0 bytes defined
+ Payload size: 43 bytes
+ Frame size: 125 bytes
+
+  1  ff:ff:ff:ff:ff:ff:00:30  05:76:2e:8d:81:00:e0:01  81:00:a0:c8:08:00:45:00  00:67:00:00:00:00:ff:06
+ 33  fa:e4:c0:a8:00:04:ff:ff  ff:ff:00:00:00:00:ca:fe  ba:be:00:00:00:00:a0:07  00:64:f7:ab:00:00:02:04
+ 65  05:ac:04:02:08:0a:19:35  90:c3:00:00:00:00:01:03  03:05:54:68:69:73:20:69  73:20:61:20:64:75:6d:6d
+ 97  79:20:70:61:79:6c:6f:61  64:20:66:6f:72:20:6d:79  20:66:69:72:73:74:20:70  61:63:6b:65:74
+
+
+ mz-0.38#
+</pre>
+<p>If you want to stop one or more packet processes, use the <strong>stop</strong> command. The &quot;emergency
+stop&quot; is when you use <strong>stop all</strong>:</p>
+<pre class="literal-block">
+mz-0.38# stop all
+Stopping
+[3] PKT0003
+
+
+Stopped 1 transmission processe(s)
+</pre>
+<p>The <strong>launch</strong> command provides a shortcut for commonly used packet processes. For example to
+behave like a STP-capable bridge we want to start an BPDU process with typical parameters:</p>
+<pre class="literal-block">
+mz-0.38# laun bpdu
+Allocated new packet sysBPDU at slot 5
+
+mz-0.38# sh pac
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName           Layers  Proto    Size  State      Device      Delay       Count/CntX
+    1  sysARP_servic...  E-----  ARP        60  config     lo          100 msec        1/0 (100%)
+    2  Test              E-Q-IT            125  config     eth0       1000 usec     1000/1000 (0%)
+    3  PKT0003           E-----  LLDP       36  config     eth0          30 sec        0/12 (0%)
+    4  PKT0004           E---I-  IGMP       46  config     eth0        100 msec        0/0 (0%)
+    5  sysBPDU           ES----  BPDU       29  active     eth0           2 sec        0/1 (0%)
+
+5 packets defined, 1 active.
+</pre>
+<p>Now a Configuration BPDU is sent every 2 seconds, claiming to be the root bridge (and usually
+confusing the LAN. Note that only packet 5 (i. e. the last row) is active and therefore sending
+packets while all other packets are in state <strong>config</strong> (i. e. they have been configured but
+they are not doing anything at the moment).</p>
+</div>
+<div class="section" id="configuring-a-greater-interval">
+<h2><a class="toc-backref" href="#id8">5.3&nbsp;&nbsp;&nbsp;Configuring a greater interval</a></h2>
+<p>Sometimes you may want to send a burst of packets at a greater interval:</p>
+<pre class="literal-block">
+mz-0.38(config)# pac 2
+Modify packet parameters for packet Test [2]
+
+mz-0.38(config-pkt-2)# interv
+Configure a greater packet interval in days, hours, minutes, or seconds
+
+Arguments: &lt;value&gt;  &lt;days | hours | minutes | seconds&gt;
+
+Use a zero value to disable an interval.
+
+
+mz-0.38(config-pkt-2)# interv 1 h
+
+mz-0.38(config-pkt-2)# count 10
+
+mz-0.38(config-pkt-2)# delay 15 usec
+Inter-packet delay set to 0 sec and 15000 nsec
+</pre>
+<p>Now this packet is sent ten times with an inter-packet delay of 15 microsecond and this is
+repeated every hour. When you look at the packet list, an interval is indicated with the
+additional flag 'i' when inactive or 'I' when active:</p>
+<pre class="literal-block">
+mz-0.38# sh pa
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName           Layers  Proto    Size  State      Device      Delay       Count/CntX
+    1  sysARP_servic...  E-----  ARP        60  config     lo          100 msec        1/0 (100%)
+    2  Test              E-Q-IT            125  config-i   eth0         15 usec       10/10 (0%)
+    3  PKT0003           E-----  LLDP       36  config     eth0          30 sec        0/12 (0%)
+    4  PKT0004           E---I-  IGMP       46  config     eth0        100 msec        0/0 (0%)
+    5  sysBPDU           ES----  BPDU       29  active     eth0           2 sec        0/251 (0%)
+
+5 packets defined, 1 active.
+
+
+mz-0.38# start sl 2
+Activate [2]
+
+
+mz-0.38# sh pa
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName           Layers  Proto    Size  State      Device      Delay       Count/CntX
+    1  sysARP_servic...  E-----  ARP        60  config     lo          100 msec        1/0 (100%)
+    2  Test              E-Q-IT            125  config+I   eth0         15 usec       10/0 (100%)
+    3  PKT0003           E-----  LLDP       36  config     eth0          30 sec        0/12 (0%)
+    4  PKT0004           E---I-  IGMP       46  config     eth0        100 msec        0/0 (0%)
+    5  sysBPDU           ES----  BPDU       29  active     eth0           2 sec        0/256 (0%)
+
+5 packets defined, 1 active.
+</pre>
+<p>Note that the flag 'I' indicates that an interval has been specified for packet 2. The process
+is not active at the moment (only packet 5 is active here) but it will become active in a
+regular interval. You can verify the actual interval when viewing the packet details via the <strong>show
+packet 2</strong> command.</p>
+</div>
+</div>
+<div class="section" id="load-prepared-configurations">
+<h1><a class="toc-backref" href="#id9">6&nbsp;&nbsp;&nbsp;Load prepared configurations</a></h1>
+<p>You can prepare packet configurations using the same commands as you would type them in on the
+CLI and then load them to the CLI.</p>
+<p>For example assume we have prepared a file 'test.mops' containing:</p>
+<pre class="literal-block">
+configure terminal
+packet
+name IGMP_TEST
+desc This is only a demonstration how to load a file to mops
+type igmp
+</pre>
+<p>Then we can add this packet configuration to our packet list using the <strong>load</strong> command:</p>
+<pre class="literal-block">
+mz-0.38# load test.mops
+Read commands from test.mops...
+
+Allocated new packet PKT0002 at slot 2
+
+mz-0.38# sh pa
+Packet layer flags: E=Ethernet, S=SNAP, Q=802.1Q, M=MPLS, I/i=IP/delivery_off, U=UDP, T=TCP
+
+PktID  PktName           Layers  Proto    Size  State      Device      Delay       Count/CntX
+    1  sysARP_servic...  E-----  ARP        60  config     lo          100 msec        1/0 (100%)
+    2  IGMP_TEST         E---I-  IGMP       46  config     eth0        100 msec        0/0 (0%)
+
+2 packets defined, 0 active.
+</pre>
+</div>
+<div class="section" id="what-s-next">
+<h1><a class="toc-backref" href="#id10">7&nbsp;&nbsp;&nbsp;What's next?</a></h1>
+<p>The following features are planned, some of them are already experimental
+and will be available soon:</p>
+<blockquote>
+<ul class="simple">
+<li>Other basic protocols, including RTP</li>
+<li>Scanning processes</li>
+<li>Logging processes</li>
+<li>IPv6</li>
+<li>Custom protocols via XML</li>
+<li>Object oriented configuration</li>
+<li>Benchmarking according RFC 2544 (device under tests)</li>
+</ul>
+</blockquote>
+<p>and many others (the true list is much longer). Also a GUI is in preparation (which will surely not
+replace the CLI).</p>
+</div>
+<div class="section" id="dear-users">
+<h1><a class="toc-backref" href="#id11">8&nbsp;&nbsp;&nbsp;Dear users</a></h1>
+<p>Mausezahn is still under heavy development and you may expect new features
+very soon.</p>
+<p><strong>Please report</strong> to <em>herbert AT perihel DOT at</em> regarding:</p>
+<blockquote>
+<ul class="simple">
+<li>Bugs</li>
+<li>Important features you miss</li>
+<li>How you used Mausezahn (I am really interested in practical problems)</li>
+<li>Interesting observations with Mausezahn at the network</li>
+</ul>
+</blockquote>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+Dear Mausezahn users,
+
+since version 0.38, Mausezahn supports a multi-threaded interactive mode with
+a Cisco-style command line. 
+
+Try e. g. "mz -x 99" and telnet to port 99. This mode utilizes a new protocol 
+and packet management framework called MOPS (Mausezahn's Own Packet System).
+All new features will be added to the MOPS which represents the new core
+framework of Mausezahn. 
+
+If you execute Mausezahn traditionally, specifying all packet parameters as
+arguments on the LINUX/UN*X shell, then MOPS is NOT used (libnet instead).
+MOPS on the other hand does not need libnet anymore but creates all PDUs
+completely by itself. This allows for a much more flexible header treatment,
+such as an arbitrary number of MPLS headers or intentionally 'wrong' header 
+fields.
+
+The most interesting new features introduced by MOPS are:
+
+*) Nanosecond interpacket delay and overall transmission intervals (days, hours, ... )
+*) New additional protocols: LLDP, IGMPv1 and IGMPv2, extended spanning tree
+   options (for RSTP, MSTP, PVST+)
+*) Valid or wrong checksums on multiple layers
+*) RTP measurement compatibility with legacy and MOPS RTP mode
+*) Access to *all* header fields, even to those "reserved" or "must be zero"
+*) Very flexible and user friendly QoS options (ToS, DSCP, IPP, CoS, ...) in
+   different notations (hex, dec, binary, "EF", "AF32", ...)
+*) New 'launch' command to start often-used packet processes quickly (will be
+   extended soon)
+*) Each packet process can be tied to another physical interface
+*) Each physical interface can be given an arbitrary fake MAC and/or IP address.
+*) 802.1Q and MPLS tags with all parameters can be configured easily with the
+   'tag' command.
+
+
+You can store your packet configurations in text files and load them from the
+Mausezahn command line interface.
+
+
+*** PLEASE send be bug reports! ***
+
+Next planned features: (among many others)
+
+- IPv6 support for MOPS
+- XML-based definitions of custom protocols
+- Graphical user interface
+- Logging service
+- ICMP support for MOPS
+
+and other...
+
+
+Best wishes
+
+herbert AT perihel.at

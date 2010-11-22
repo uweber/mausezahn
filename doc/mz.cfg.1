@@ -1,0 +1,83 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH mz.cfg 1 "March 7, 2010"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+mz \- a fast versatile packet generator
+.SH SYNOPSIS
+.B /etc/mausezahn/mz.cfg
+.br
+.SH DESCRIPTION
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+\fBMausezahn\fP is a free fast traffic generator written in C which allows 
+you to send nearly every possible and impossible packet. Mausezahn's MOPS
+subsystem (Mausezahn's Own Packet System) supports an interactive mode with
+a Cisco-style command line interface (CLI). In order to activate this
+interactive mode, execute Mausezahn using the \fI-x\fP argument, optionally
+followed by an arbitrary TCP port number, such as
+.PP
+# mz \-x 99
+.PP
+in which case you can connect to Mausezahn via
+.PP
+$ telnet 127.0.0.1 99
+.PP
+If no port number is specified, Mausezahn uses the default port number 25542
+(which is the date of towel day followed by the answer to the universe and 
+everything; however, you don't need to understand this in order to continue).
+.PP
+Login credentials as well as other
+MOPS-related parameters can be specified in the Mausezahn configuration file
+\fImz.cfg\fP located in \f/etc/mausezahn\fP. Currently, user-specific 
+configuration files are not supported.
+.PP
+If no configuration file is present Mausezahn assumes the following default login
+credentials:
+.TP
+.PP
+username: mz
+.br
+password: mz
+.br
+enable password: mops
+.PP
+
+Currently only login credentials can be configured within the configuration
+file. Here is an example content of \fI/etc/mausezahn/mz.cfg\fP:
+.TP
+.PP
+user = herbert
+.br
+password = moTTe
+.br
+enable = T0p5ecreT
+.PP
+Additional configuration options will be officially supported with the next
+releases.
+.SH FILES
+\fI/etc/mausezahn/mz.cfg\fP
+.SH SEE ALSO
+ \fBmz(1)\fP
+.SH AUTHOR
+Herbert Haas. 
+.PP
+Visit www.perihel.at/sec/mz/ for Mausezahn news and additional information.
+.PP
+This manual page was written by Herbert Haas <herbert AT perihel DOT at>,
+for the Debian project.
