@@ -40,7 +40,7 @@
 		"|  sp          0-65535\n" \
 		"|  dp          0-65535\n" \
 		"|  len         0-65535\n" \
-		"|  sum         0-65535\n" \
+		"|  udp_sum     0-65535\n" \
 		"|  payload|p   <hex payload>\n" \
 		"|\n" \
 		"| Optionally the port numbers can be specified as ranges, e. g. \"dp=1023-33700\",\n" \
@@ -107,7 +107,7 @@
 		"|  a          0-4294967295                         Acknowledgement Nr.\n" \
 		"|  win        0-65535                              Window Size\n" \
 		"|  urg        0-65535                              Urgent Pointer\n" \
-		"|  sum        0-65535                              Checksum\n" \
+		"|  tcp_sum    0-65535                              Checksum\n" \
 		"|\n" \
 		"| The port numbers can be specified as ranges, e. g. \"dp=1023-33700\".\n" \
 		"| Multiple flags can be specified such as \"flags=syn|ack|urg\".\n" \
@@ -201,6 +201,11 @@ libnet_ptag_t  create_udp_packet (libnet_t *l)
 	tx.ip_sum = (u_int16_t) str2int(argval);
      }
 
+   if (getarg(tx.arg_string,"udp_sum", argval)==1)
+     {
+        tx.udp_sum = (u_int16_t) str2int(argval);
+     }
+
    
    if (tx.ascii) // ASCII PAYLOAD overrides hex payload
      {
@@ -259,7 +264,7 @@ libnet_ptag_t  create_udp_packet (libnet_t *l)
 			l, 
 			0);
    
-   libnet_toggle_checksum(l, t, LIBNET_ON);
+   libnet_toggle_checksum(l, t, tx.udp_sum ? LIBNET_OFF : LIBNET_ON);
    
    if (t == -1)
      {
@@ -375,7 +380,7 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
      }
    
    
-   if (getarg(tx.arg_string,"sum", argval)==1)
+   if (getarg(tx.arg_string,"icmp_sum", argval)==1)
      {
 	tx.icmp_chksum = (u_int16_t) str2int(argval);
      }
@@ -507,6 +512,7 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
 	return (1);
      }
 
+   libnet_toggle_checksum(l, t, tx.icmp_chksum ? LIBNET_OFF : LIBNET_ON);
 
    if (t == -1)
      {
@@ -639,7 +645,11 @@ libnet_ptag_t  create_tcp_packet (libnet_t *l)
 	     tx.tcp_control=2; // Assume SYN as default
 	  }
      }
-   
+
+   if (getarg(tx.arg_string,"tcp_sum", argval)==1)
+     {
+        tx.tcp_sum = (u_int16_t) str2int(argval);
+     }
 
    // Check if hex_payload already specified (externally)
    if (tx.hex_payload_s)
@@ -708,7 +718,7 @@ libnet_ptag_t  create_tcp_packet (libnet_t *l)
 			 tx.tcp_ack,
 			 tx.tcp_control,
 			 tx.tcp_win, 
-			 0, //tx.tcp_sum, 
+			 tx.tcp_sum,
 			 tx.tcp_urg, 
 			 tx.tcp_len,
 			 (tx.tcp_payload_s) ? tx.tcp_payload : NULL,
@@ -718,7 +728,7 @@ libnet_ptag_t  create_tcp_packet (libnet_t *l)
 
    
    
-   libnet_toggle_checksum(l, t, LIBNET_ON);
+   libnet_toggle_checksum(l, t, tx.tcp_sum ? LIBNET_OFF : LIBNET_ON);
    
    if (t == -1)
      {
