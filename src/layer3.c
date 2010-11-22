@@ -369,6 +369,7 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
 				       tx.ip_option_s, 
 				       l,
 				       0);
+	tx.ip_len += tx.ip_option_s;
      }
    
    
