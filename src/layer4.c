@@ -95,6 +95,18 @@
 		"|\n" \
 		"\n"
 
+#define MZ_ICMP6_HELP \
+		"| ICMPv6 type: Send raw ICMPv6 packets.\n" \
+		"|\n" \
+		"| Parameters  Values                               Explanation \n"  \
+		"| ----------  ------------------------------------ -------------------\n" \
+		"|  type       0-255                                ICMPv6 Type\n" \
+		"|  code       0-255                                ICMPv6 Code\n" \
+		"|  id         0-65535                              optional identification number\n" \
+		"|  seq        0-65535                              optional packet sequence number\n" \
+		"|  icmpv6_sum 0-65535                              optional checksum\n" \
+		"\n"
+
 #define MZ_TCP_HELP \
    		"| TCP type: Send raw TCP packets.\n" \
 		"|\n" \
@@ -264,7 +276,8 @@ libnet_ptag_t  create_udp_packet (libnet_t *l)
 			l, 
 			0);
    
-   libnet_toggle_checksum(l, t, tx.udp_sum ? LIBNET_OFF : LIBNET_ON);
+   // Checksum overwrite? Libnet IPv6 checksum calculation can't deal with extension headers, we have to do it ourself...
+   libnet_toggle_checksum(l, t, (tx.udp_sum || ipv6_mode) ? LIBNET_OFF : LIBNET_ON);
    
    if (t == -1)
      {
@@ -529,7 +542,123 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
    return t;
 }
 
+libnet_ptag_t  create_icmp6_packet (libnet_t *l)
+{
+   libnet_ptag_t  t;
+   char argval[MAX_PAYLOAD_SIZE];
 
+   int i;
+   tx.icmp_ident = 0;
+   tx.icmp_sqnr = 0;
+
+   if ( (getarg(tx.arg_string,"help", NULL)==1) && (mode==ICMP) )
+     {
+	if (mz_port)
+	  {
+	     cli_print(gcli, "%s", MZ_ICMP6_HELP);
+	     return -1;
+	  }
+	else
+	  {
+	     fprintf(stderr,"\n"
+		     MAUSEZAHN_VERSION
+		     "\n%s", MZ_ICMP6_HELP);
+	     exit(0);
+	  }
+     }
+
+
+   /////////////////////////////////////////
+   //
+   // Which parameters have been specified?
+
+
+   if (getarg(tx.arg_string,"type", argval)==1)
+     {
+	tx.icmp_type = (u_int8_t) str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"code", argval)==1)
+     {
+	tx.icmp_code = (u_int8_t) str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"id", argval)==1)
+     {
+	tx.icmp_ident = (u_int16_t) str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"seq", argval)==1)
+     {
+	tx.icmp_sqnr = (u_int16_t) str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"icmpv6_sum", argval)==1)
+     {
+	tx.icmp_chksum = (u_int16_t) str2int(argval);
+     }
+
+   // Check if hex_payload already specified (externally)
+   if (tx.hex_payload_s)
+     {
+	memcpy( (void*) tx.icmp_payload, (void*) tx.hex_payload, tx.hex_payload_s);
+	tx.icmp_payload_s = tx.hex_payload_s;
+     }
+
+   if ( (getarg(tx.arg_string,"payload", argval)==1) || (getarg(tx.arg_string,"p", argval)==1))
+     {
+	tx.icmp_payload_s = str2hex (argval, tx.icmp_payload, MAX_PAYLOAD_SIZE);
+     }
+   else
+     {
+	tx.icmp_payload_s = 0;
+     }
+
+   if (tx.ascii) // ASCII PAYLOAD overrides hex payload
+     {
+	strncpy((char *)tx.icmp_payload, (char *)tx.ascii_payload, MAX_PAYLOAD_SIZE);
+	tx.icmp_payload_s = strlen((char *)tx.ascii_payload);
+     }
+
+   /////////
+   // Want some padding? The specified number of padding bytes are ADDED to the
+   // payload.
+   // (Note the difference in send_eth() where you specified the total number
+   // of bytes in the frame)
+   //
+   if (tx.padding)
+     {
+	for (i=0; i<tx.padding; i++)
+	  {
+	     tx.icmp_payload[tx.icmp_payload_s+i] = 0x42; // pad with THE ANSWER (why random?)
+	  }
+	tx.icmp_payload_s += tx.padding;
+     }
+
+   sprintf(tx.icmp_verbose_txt,"ICMPv6 Type %u Code %u\n",tx.icmp_type,tx.icmp_code);
+
+   t = libnet_build_icmpv4_echo (tx.icmp_type,
+				    tx.icmp_code,
+				    tx.icmp_chksum,
+				    tx.icmp_ident,
+				    tx.icmp_sqnr,
+				    tx.icmp_payload_s ? tx.icmp_payload : NULL,
+				    tx.icmp_payload_s,
+				    l,
+				    0);
+   tx.ip_payload_s = LIBNET_ICMPV6_H + tx.icmp_payload_s;  // for send_ip
+
+   // Libnet IPv6 checksum calculation can't deal with extension headers, we have to do it ourself...
+   libnet_toggle_checksum(l, t, (tx.icmp_chksum || ipv6_mode) ? LIBNET_OFF : LIBNET_ON);
+
+   if (t == -1)
+     {
+	fprintf(stderr, " mz/create_icmp_packet: Can't build ICMPv6 header: %s\n", libnet_geterror(l));
+	exit (0);
+     }
+
+   return t;
+}
 
 
 
@@ -715,6 +844,14 @@ libnet_ptag_t  create_tcp_packet (libnet_t *l)
 	  }
 
 	tx.tcp_len += 20;
+	tx.tcp_offset = 10;
+	tx.ip_payload_s = tx.tcp_len;	// for create_ip_packet
+	tx.tcp_sum_part = libnet_in_cksum((u_int16_t *) tcp_default_options, 20);
+     }
+   else
+     {
+       tx.tcp_offset = 5;
+       tx.tcp_sum_part = 0;
      }
 
    t = libnet_build_tcp (tx.sp, 
@@ -733,7 +870,8 @@ libnet_ptag_t  create_tcp_packet (libnet_t *l)
 
    
    
-   libnet_toggle_checksum(l, t, tx.tcp_sum ? LIBNET_OFF : LIBNET_ON);
+   // Libnet IPv6 checksum calculation can't deal with extension headers, we have to do it ourself...
+   libnet_toggle_checksum(l, t, (tx.tcp_sum || ipv6_mode) ? LIBNET_OFF : LIBNET_ON);
    
    if (t == -1)
      {

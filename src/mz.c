@@ -99,6 +99,8 @@ void usage()
 		   "|\n"
 		   "| Short option description (see doc or manpage for more information):\n"
 		   "|  -h                    Prints this information.\n"
+		   "|  -4		     IPv4 mode (default)\n"
+		   "|  -6		     IPv6 mode\n"
 		   "|  -c <count>            Send the packet count times (default: 1, infinite: 0).\n"
 		   "|  -d <delay>            Apply delay between transmissions. The delay value can be\n"
 		   "|                        specified in usec (default, no additional unit needed), or in\n"
@@ -238,11 +240,27 @@ int main(int argc, char *argv[])
 	  send_frame (l, t3, t4); // NOTE: send_frame also destroys context finaly
 	break;
 	
+      case ICMP6:
+	tx.ip_proto = 58;
+	l = get_link_context();
+	t4 = create_icmp6_packet(l);	// t4 can be used for later header changes
+	t3 = create_ip_packet(l);	// t3 can be used for later header changes
+	if (ipv6_mode)
+	  update_ISUM(l, t4);
+	if (!quiet) complexity();
+	if (tx.packet_mode==0)		// Ethernet manipulation features does NOT use ARP to determine eth_dst
+	  t2 = create_eth_frame(l, t3, t4);	// t2 can be used for later header changes
+	else
+	  send_frame (l, t3, t4); // NOTE: send_frame also destroys context finaly
+	break;
+
       case UDP:
 	tx.ip_proto = 17;
 	l = get_link_context();
 	t4 = create_udp_packet(l);     // t4 can be used for later header changes
 	t3 = create_ip_packet(l);      // t3 can be used for later header changes
+	if (ipv6_mode)
+	  update_USUM(l, t4);
 	if (!quiet) complexity();
 	if (tx.packet_mode==0)         // Ethernet manipulation features does NOT use ARP to determine eth_dst  
 	  t2 = create_eth_frame(l, t3, t4);    // t2 can be used for later header changes
@@ -255,6 +273,8 @@ int main(int argc, char *argv[])
 	l = get_link_context();
 	t4 = create_tcp_packet(l);     // t4 can be used for later header changes
 	t3 = create_ip_packet(l);      // t3 can be used for later header changes
+	if (ipv6_mode)
+	  update_TSUM(l, t4);
 	if (!quiet) complexity();
 	if (tx.packet_mode==0)         // Ethernet manipulation features does NOT use ARP to determine eth_dst  
 	  t2 = create_eth_frame(l, t3, t4);    // t2 can be used for later header changes

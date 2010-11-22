@@ -240,6 +240,7 @@ enum operating_modes
      BPDU, 
      IP, 
      ICMP,
+     ICMP6,
      UDP, 
      TCP,
      DNS,
@@ -251,6 +252,7 @@ enum operating_modes
 } mode;
 
 
+int ipv6_mode;
 int quiet;           // don't even print 'important standard short messages'
 int verbose;         // report character
 int simulate;        // if 1 then don't really send frames
@@ -372,6 +374,7 @@ struct tx_struct
    
    // IP parameters
    u_int32_t ip_src;          // has always network byte order(!)
+   struct libnet_in6_addr ip6_src;
    char      ip_src_txt[256];
    int       ip_src_rand;     // if set to 1 then SA should be random
    u_int32_t ip_src_h;        // mirror of ip_src (NOT network byte order => easy to count)
@@ -379,6 +382,7 @@ struct tx_struct
    u_int32_t ip_src_stop;     // stop of range  (NOT network byte order => easy to count)
    int       ip_src_isrange;  // if set to 1 then the start/stop values above are valid.
    u_int32_t ip_dst;          // has always network byte order(!)
+   struct libnet_in6_addr ip6_dst;
    char      ip_dst_txt[256];
    u_int32_t ip_dst_h;        // mirror of ip_dst (NOT network byte order => easy to count)
    u_int32_t ip_dst_start;    // start of range (NOT network byte order => easy to count)
@@ -392,11 +396,14 @@ struct tx_struct
    u_int8_t 
      ip_tos,
      ip_ttl,
+     ip6_segs,
      ip_proto;
    u_int8_t 
      ip_option[1024],
      ip_payload[MAX_PAYLOAD_SIZE];
    u_int32_t 
+     ip_flow,
+     ip6_id,
      ip_option_s,
      ip_payload_s;
 
@@ -416,6 +423,7 @@ struct tx_struct
      icmp_payload[MAX_PAYLOAD_SIZE];
 
    // General L4 parameters:
+   char *layer4;
    u_int16_t 
      sp, dp, 
      sp_start, sp_stop,
@@ -441,6 +449,7 @@ struct tx_struct
      tcp_seq_delta,                 // Also used instead of an 'isrange' variable
      tcp_ack;
    u_int8_t 
+     tcp_offset,
      tcp_control;
    u_int16_t 
      tcp_win, 
@@ -450,6 +459,7 @@ struct tx_struct
    u_int8_t 
      tcp_payload[MAX_PAYLOAD_SIZE];
    u_int32_t 
+     tcp_sum_part,
      tcp_payload_s;
 
    // RTP parameters
@@ -520,6 +530,7 @@ int send_cdp ();
 
 libnet_t*      get_link_context();
 libnet_ptag_t  create_ip_packet (libnet_t *l);
+libnet_ptag_t  create_ip6_packet (libnet_t *l);
 int            send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4);
 
 
@@ -531,6 +542,7 @@ int            send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4);
 // ************************************
 libnet_ptag_t  create_udp_packet (libnet_t *l);  
 libnet_ptag_t  create_icmp_packet (libnet_t *l);  	
+libnet_ptag_t  create_icmp6_packet (libnet_t *l);
 libnet_ptag_t  create_tcp_packet (libnet_t *l);
 
 
@@ -741,6 +753,9 @@ int update_SPORT(libnet_t *l, libnet_ptag_t t);
 // 
 int update_TCP_SQNR(libnet_t *l, libnet_ptag_t t);
 
+int update_ISUM(libnet_t *l, libnet_ptag_t t);
+int update_USUM(libnet_t *l, libnet_ptag_t t);
+int update_TSUM(libnet_t *l, libnet_ptag_t t);
 
 //
 //

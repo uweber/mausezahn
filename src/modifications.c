@@ -407,7 +407,146 @@ int update_SPORT(libnet_t *l, libnet_ptag_t t)
    return i;   
 }
 
+#define LIBNET_CKSUM_CARRY(x) \
+    (x = (x >> 16) + (x & 0xffff), (~(x + (x >> 16)) & 0xffff))
 
+int update_USUM(libnet_t *l, libnet_ptag_t t)
+{
+     int sum = 0;
+     unsigned int tmp;
+
+     if (tx.udp_sum != 0)
+	return 0;
+
+     sum += libnet_in_cksum((u_int16_t *) &tx.ip6_src, 16);
+     if (tx.ip_option_s && tx.ip6_segs)
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip_option[tx.ip_option_s - 16], 16); // Use last IP address
+     else
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip6_dst, 16);
+
+     tmp = htonl(tx.udp_len);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+     tmp = htonl(IPPROTO_UDP);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = ((htons(tx.sp) << 16) + htons(tx.dp));
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = htons(tx.udp_len) << 16;
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     if (tx.udp_payload_s)
+       sum += libnet_in_cksum((u_int16_t *) tx.udp_payload, tx.udp_payload_s);
+
+     tx.udp_sum = ntohs(LIBNET_CKSUM_CARRY(sum));
+
+     t = libnet_build_udp(tx.sp,
+			  tx.dp,
+			  tx.udp_len,
+			  tx.udp_sum,
+			  tx.udp_payload_s ? tx.udp_payload : NULL,
+			  tx.udp_payload_s,
+			  l,
+			  t);
+     return t;
+}
+
+int update_TSUM(libnet_t *l, libnet_ptag_t t)
+{
+     int sum = 0;
+     unsigned int tmp;
+
+     if (tx.tcp_sum != 0)
+	return 0;
+
+     sum += libnet_in_cksum((u_int16_t *) &tx.ip6_src, 16);
+     if (tx.ip_option_s && tx.ip6_segs)
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip_option[tx.ip_option_s - 16], 16); // Use last IP address
+     else
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip6_dst, 16);
+
+     tmp = htonl(tx.tcp_len);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+     tmp = htonl(IPPROTO_TCP);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = ((htons(tx.sp) << 16) + htons(tx.dp));
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = htonl(tx.tcp_seq);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+     tmp = htonl(tx.tcp_ack);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = ((ntohs(((tx.tcp_offset) << 12) + tx.tcp_control) << 16) + htons(tx.tcp_win));
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = htonl(tx.tcp_urg);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     sum += tx.tcp_sum_part;
+
+     if (tx.tcp_payload_s)
+       sum += libnet_in_cksum((u_int16_t *) tx.tcp_payload, tx.tcp_payload_s);
+
+     tx.tcp_sum = ntohs(LIBNET_CKSUM_CARRY(sum));
+
+     t = libnet_build_tcp (tx.sp,
+	                   tx.dp,
+	                   tx.tcp_seq,
+	                   tx.tcp_ack,
+	                   tx.tcp_control,
+	                   tx.tcp_win,
+	                   tx.tcp_sum,
+	                   tx.tcp_urg,
+	                   tx.tcp_len,
+	                   tx.tcp_payload_s ? tx.tcp_payload : NULL,
+	                   tx.tcp_payload_s,
+	                   l,
+	                   t);
+
+   return t;
+}
+
+int update_ISUM(libnet_t *l, libnet_ptag_t t)
+{
+     int sum = 0;
+     unsigned int tmp;
+
+     if (tx.icmp_chksum != 0)
+	return 0;
+
+     sum += libnet_in_cksum((u_int16_t *) &tx.ip6_src, 16);
+     if (tx.ip_option_s && tx.ip6_segs)
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip_option[tx.ip_option_s - 16], 16); // Use last IP address
+     else
+       sum += libnet_in_cksum((u_int16_t *) &tx.ip6_dst, 16);
+
+     tmp = htonl(LIBNET_ICMPV6_H + tx.icmp_payload_s);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+     tmp = htonl(IPPROTO_ICMP6);
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     tmp = htonl(((tx.icmp_type << 8) + tx.icmp_code));
+     sum += libnet_in_cksum((u_int16_t *) &tmp, 4);
+
+     if (tx.icmp_payload_s)
+       sum += libnet_in_cksum((u_int16_t *) tx.icmp_payload, tx.icmp_payload_s);
+
+     tx.icmp_chksum = ntohs(LIBNET_CKSUM_CARRY(sum));
+
+     t = libnet_build_icmpv4_echo (tx.icmp_type,
+				   tx.icmp_code,
+				   tx.icmp_chksum,
+				   tx.icmp_ident,
+				   tx.icmp_sqnr,
+				   tx.icmp_payload_s ? tx.icmp_payload : NULL,
+				   tx.icmp_payload_s,
+				   l,
+				   t);
+
+   return t;
+}
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -500,11 +639,23 @@ int print_frame_details()
    dum1 =  (unsigned char*) &tx.ip_src_h;
    dum2 = (unsigned char*) &tx.ip_dst_h;
    (mode==IP) ? (void) bs2str(tx.ip_payload, pld, tx.ip_payload_s) : strcpy(pld, "[see next layer]");
-   fprintf(stderr," IP:  ver=4, len=%u, tos=%u, id=%u, frag=%u, ttl=%u, proto=%u, sum=%u, "
-	   "SA=%u.%u.%u.%u, DA=%u.%u.%u.%u,\n"
-	   "      payload=%s\n", tx.ip_len, tx.ip_tos,
-	   tx.ip_id, tx.ip_frag, tx.ip_ttl, tx.ip_proto, tx.ip_sum, 
-	   *(dum1+3),*(dum1+2),*(dum1+1),*(dum1), *(dum2+3),*(dum2+2),*(dum2+1),*(dum2+0), pld);
+
+   if (ipv6_mode) {
+     char src6[64]; char dst6[64];
+     libnet_addr2name6_r(tx.ip6_src, LIBNET_DONT_RESOLVE, src6, 64);
+     libnet_addr2name6_r(tx.ip6_dst, LIBNET_DONT_RESOLVE, dst6, 64);
+
+     fprintf(stderr," IP:  ver=6, dscp=%u, flow=%u, len=%u, next=%u, hop=%u "
+             "SA=%s, DA=%s\n      payload=%s\n", tx.ip_tos, tx.ip_flow,
+	     tx.ip_len, tx.ip_proto, tx.ip_ttl, src6, dst6, pld);
+   }
+   else {
+     fprintf(stderr," IP:  ver=4, len=%u, tos=%u, id=%u, frag=%u, ttl=%u, proto=%u, sum=%u, "
+	     "SA=%u.%u.%u.%u, DA=%u.%u.%u.%u,\n"
+	     "      payload=%s\n", tx.ip_len, tx.ip_tos,
+	     tx.ip_id, tx.ip_frag, tx.ip_ttl, tx.ip_proto, tx.ip_sum,
+	     *(dum1+3),*(dum1+2),*(dum1+1),*(dum1), *(dum2+3),*(dum2+2),*(dum2+1),*(dum2+0), pld);
+   }
    
    if ((mode==UDP)||(mode==DNS)||(mode==RTP))
      {
@@ -523,6 +674,11 @@ int print_frame_details()
    // send_icmp must prepare the verbose string because there are many
    // different types of ICMP packets...
    if (mode==ICMP) 
+     {
+	fprintf(stderr, " %s\n", tx.icmp_verbose_txt);
+     }
+
+   if (mode==ICMP6)
      {
 	fprintf(stderr, " %s\n", tx.icmp_verbose_txt);
      }

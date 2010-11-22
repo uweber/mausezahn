@@ -43,6 +43,7 @@ int reset()
 	
    // Reset globals:
    quiet = 0;
+   ipv6_mode = 0;
    verbose = 0;
    simulate = 0;
    filename[0] = '\0';
@@ -212,8 +213,16 @@ int getopts (int argc, char *argv[])
 	opterr = 1; // let getopt print error message if necessary
 	
 	
-	while ((c = getopt (argc, argv, "hqvVSxra:A:b:B:c:d:f:F:p:P:t:T:M:Q:X:")) != -1)
+	while ((c = getopt (argc, argv, "46hqvVSxra:A:b:B:c:d:E:f:F:p:P:t:T:M:Q:X:")) != -1)
 		switch (c) {
+		 case '4':
+			tx.eth_type = 0x0800;
+			ipv6_mode=0;
+			break;
+		 case '6':
+			tx.eth_type = 0x86dd;
+			ipv6_mode=1;
+			break;
 		 case 'h':
 			usage();
 			break;
@@ -237,14 +246,14 @@ int getopts (int argc, char *argv[])
 			tx.packet_mode = 0;
 			break;
 		 case 'A':
-			strncpy (tx.ip_src_txt, optarg, 32);
+			strncpy (tx.ip_src_txt, optarg, sizeof(tx.ip_src_txt));
 			break;
 		 case 'b':
 			strncpy (tx.eth_dst_txt, optarg, 32);
 			tx.packet_mode = 0;
 			break;
 		 case 'B':
-			strncpy (tx.ip_dst_txt, optarg, 32);
+			strncpy (tx.ip_dst_txt, optarg, sizeof(tx.ip_dst_txt));
 			break;
 		 case 'c':
 			errno=0;
@@ -466,11 +475,20 @@ int getopts (int argc, char *argv[])
 			}
 			else if (get_ip_range_src(tx.ip_src_txt)) { // returns 1 when no range has been specified
 				// name2addr4 accepts a DOTTED DECIMAL ADDRESS or a FQDN:
-				tx.ip_src = libnet_name2addr4 (l, tx.ip_src_txt, LIBNET_RESOLVE);		     
+				if (ipv6_mode)
+					tx.ip6_src = libnet_name2addr6 (l, tx.ip_src_txt, LIBNET_RESOLVE);
+				else
+					tx.ip_src = libnet_name2addr4 (l, tx.ip_src_txt, LIBNET_RESOLVE);
 			}
 		}
 		else { // no source IP specified: by default use own IP address
-			tx.ip_src = libnet_get_ipaddr4(l);
+			if (ipv6_mode) {
+				tx.ip6_src = libnet_get_ipaddr6(l);
+				if (strncmp((char*)&tx.ip6_src,(char*)&in6addr_error,sizeof(in6addr_error))==0)
+					printf("Failed to set source IPv6 address: %s", l->err_buf);
+			}
+			else
+				tx.ip_src = libnet_get_ipaddr4(l);
 		}
 		
 		// Set destination IP address:
@@ -484,7 +502,10 @@ int getopts (int argc, char *argv[])
 				tx.ip_dst = libnet_name2addr4 (l, "255.255.255.255", LIBNET_DONT_RESOLVE);	
 			} else if (get_ip_range_dst(tx.ip_dst_txt)) { // returns 1 when no range has been specified
 				// name2addr4 accepts a DOTTED DECIMAL ADDRESS or a FQDN:
-				tx.ip_dst = libnet_name2addr4 (l, tx.ip_dst_txt, LIBNET_RESOLVE);		     
+				if (ipv6_mode)
+					tx.ip6_dst = libnet_name2addr6 (l, tx.ip_dst_txt, LIBNET_RESOLVE);
+				else
+					tx.ip_dst = libnet_name2addr4 (l, tx.ip_dst_txt, LIBNET_RESOLVE);
 			}
 		}
 		else { // no destination IP specified: by default use broadcast
@@ -593,6 +614,9 @@ int getopts (int argc, char *argv[])
 	}
 	else if (strcmp(packet_type,"icmp")==0) {
 		mode = ICMP;
+	}
+	else if (strcmp(packet_type,"icmp6")==0) {
+		mode = ICMP6;
 	}
 	else if (strcmp(packet_type,"tcp")==0) {
 		mode = TCP;

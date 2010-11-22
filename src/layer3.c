@@ -68,6 +68,38 @@
 		"|  \n"
 
 
+#define MZ_IP6_HELP \
+   		"| IP type: Send raw IPv6 packets.\n" \
+		"|\n" \
+		"| Supports L3 mode (automatic L2 creation) or 'L2-L3' mode (MAC addresses must be provided).\n" \
+		"| In L3 mode the IP checksum and length cannot be manipulated to wrong values (currently).\n" \
+		"| The L2-L3 mode is activated when specifying any MAC addresses on the command line\n" \
+		"| (options -a, -b). \n" \
+		"|\n" \
+		"| ARGUMENT SYNTAX:  [<comma separated parameter list>]\n" \
+		"|\n" \
+		"| Parameters:\n" \
+		"|\n" \
+		"|  len      0-65535        Only accessible in L2 mode\n" \
+		"|  sum      0-65535        Only accessible in L2 mode (0 means auto-calculation)\n" \
+		"|  tos      00-ff          Full 8-bit control via hex input (use this also for ECN bits).\n" \
+		"|  dscp     0-63           Allows easier specification of DSCP (PHB and Drop Propability)\n" \
+		"|  flow     0-1048575      Flow label\n" \
+		"|  hop      0-255          Hop limit\n" \
+		"|  next     0-255          Next protocol or header type\n" \
+		"|  frag     0-65535        Includes flags (MSB) and offset (LSB)\n" \
+		"|  mf                      Sets the \"More Fragments\" flag\n" \
+		"|  frag_res1               Sets the reserved flag 1.\n" \
+		"|  frag_res2               Sets the reserved flag 2.\n" \
+		"|  id       0-65535	    Fragment ID\n" \
+		"|  loose    <addresses>    Source Routing Header (RH0); Deprecated in RFC 5095\n" \
+		"|  segments 0-255          Number of route segments left, used by RH0\n" \
+		"|\n" \
+		"| Additionally the Ethertype can be specified:\n" \
+		"|\n" \
+		"|  ether_type 00:00-ff:ff  Only accessible in L2 mode (default = 86:d = IPv6)\n" \
+		"|  \n"
+
 
 // Only used to simplify initialization of libnet
 // Return pointer to context
@@ -85,7 +117,10 @@ libnet_t* get_link_context()
    
    if (tx.packet_mode)  
      {  // Let libnet create an appropriate Ethernet frame
-	l = libnet_init (LIBNET_RAW4_ADV, tx.device, errbuf);
+	if (ipv6_mode)
+	  l = libnet_init (LIBNET_RAW6_ADV, tx.device, errbuf);
+	else
+	  l = libnet_init (LIBNET_RAW4_ADV, tx.device, errbuf);
      }
    else // User specified Ethernet header details (src or dst)
      {
@@ -108,6 +143,9 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
    libnet_ptag_t  t; 
    char argval[MAX_PAYLOAD_SIZE];
    int i, T; // only an abbreviation for tx.packet_mode 
+
+   if (ipv6_mode)
+     return create_ip6_packet(l);
 
    // Default IP header fields
    tx.ip_len   = LIBNET_IPV4_H;  // Don't forget to add payload length
@@ -156,7 +194,8 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
 
    if ( (getarg(tx.arg_string,"payload", argval)==1) || (getarg(tx.arg_string,"p", argval)==1))
      {
-	tx.ip_payload_s = str2hex (argval, tx.ip_payload, MAX_PAYLOAD_SIZE);
+        if (mode==IP)
+	  tx.ip_payload_s = str2hex (argval, tx.ip_payload, MAX_PAYLOAD_SIZE);
      }
    // else payload has been specified as ASCII text via -P option
    
@@ -414,8 +453,270 @@ libnet_ptag_t  create_ip_packet (libnet_t *l)
    
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Prepare IPv6 packet
+libnet_ptag_t  create_ip6_packet (libnet_t *l)
+{
+   libnet_ptag_t  t;
+   char argval[MAX_PAYLOAD_SIZE];
+   int i, T; // only an abbreviation for tx.packet_mode
+
+   // Default IP header fields
+   tx.ip_len   = 0;
+   tx.ip_id    = 0;
+   tx.ip6_segs = 0;
+   tx.ip6_id   = 0;
+   tx.ip_frag  = 0;              // Flags and Offset !!!
+   tx.ip_tos   = 0;
+   tx.ip_ttl   = 255;
+
+   // temporary variables
+   unsigned int dummy;
+   size_t len;
+   char *s;
+
+   T = tx.packet_mode; // >0 means automatic L2 creation
+
+   if ( (getarg(tx.arg_string,"help", NULL)==1) && (mode==IP) )
+     {
+	if (mz_port)
+	  {
+	     cli_print(gcli, "%s", MZ_IP6_HELP);
+	     return -1;
+	  }
+	else
+	  {
+	     fprintf(stderr,"\n"
+		     MAUSEZAHN_VERSION
+		     "\n%s", MZ_IP6_HELP);
+
+	     exit(0);
+	  }
+     }
+
+   // Check if hex_payload already specified (externally)
+   if (tx.hex_payload_s)
+     {
+	memcpy( (void*) tx.ip_payload, (void*) tx.hex_payload, tx.hex_payload_s);
+	tx.ip_payload_s = tx.hex_payload_s;
+     }
+
+   // Evaluate CLI parameters:
+   if ( (getarg(tx.arg_string,"payload", argval)==1) || (getarg(tx.arg_string,"p", argval)==1))
+     {
+        if (mode==IP)
+	  tx.ip_payload_s = str2hex (argval, tx.ip_payload, MAX_PAYLOAD_SIZE);
+     }
+   // else payload has been specified as ASCII text via -P option
+
+   // NOTE: If 'mode' is NOT IP (e. g. UDP or TCP or something else)
+   // then the argument 'len' and 'sum' is NOT meant for the IP header!
+   // Instead the user can use 'iplen' and 'ipsum'.
+   if (mode==IP)
+     {
+	if (getarg(tx.arg_string,"len", argval)==1)
+	  {
+	     if (T) fprintf(stderr, " IP_Warning: 'len' cannot be set in this mode.\n");
+	     tx.ip_len = (u_int16_t) str2int(argval);
+	  }
+	else
+	  {
+	     tx.ip_len += tx.ip_payload_s;
+	  }
+     }
+   else // mode is NOT IP
+     {
+	if (getarg(tx.arg_string,"iplen", argval)==1)
+	  {
+	     if (T) fprintf(stderr, " IP_Warning: 'len' cannot be set in this mode.\n");
+	     tx.ip_len = (u_int16_t) str2int(argval);
+	  }
+	else
+	  {
+	     tx.ip_len += tx.ip_payload_s;
+	  }
+     }
 
 
+   if (getarg(tx.arg_string,"tos", argval)==1)
+     {
+	tx.ip_tos = (u_int8_t) strtol(argval,NULL,16);
+	dummy = (unsigned int) strtol(argval,NULL,16);
+	if (dummy > 255) fprintf(stderr, " IP_Warning: 'tos' too big, adjusted to LSBs\n");
+     }
+
+   if (getarg(tx.arg_string,"flow", argval)==1)
+     {
+	dummy = (unsigned int) strtol(argval,NULL,16);
+	if (dummy > 1048575)
+	  {
+	    fprintf(stderr, " IP_Warning: 'flow label' too big, adjusted to 0xfffff\n");
+	    dummy = 0xfffff;
+	  }
+        tx.ip_flow = dummy;
+     }
+
+   if (getarg(tx.arg_string,"dscp", argval)==1)
+     {
+	dummy = (unsigned int) str2int(argval);
+	if (dummy > 63)
+	  {
+	     fprintf(stderr, " IP_Warning: 'dscp' too big, adjusted to 63\n");
+	     dummy = 63;
+	  }
+	tx.ip_tos = (u_int8_t) dummy*4;
+     }
+
+   if (getarg(tx.arg_string,"id", argval)==1)
+     {
+	  tx.ip6_id = str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"frag", argval)==1)
+     {
+          tx.ip_frag = ((u_int16_t) str2int(argval)) << 3;
+     }
+
+   if (getarg(tx.arg_string,"mf", NULL)==1)
+     {
+	  tx.ip_frag |= 0x0001;
+     }
+
+   if (getarg(tx.arg_string,"frag_res1", NULL)==1)
+     {
+          tx.ip_frag |= 0x0002;
+     }
+
+   if (getarg(tx.arg_string,"frag_res2", NULL)==1)
+     {
+          tx.ip_frag |= 0x0004;
+     }
+
+   if (getarg(tx.arg_string,"hop", argval)==1)
+     {
+	tx.ip_ttl = (u_int8_t) str2int(argval);
+     }
+
+   if (getarg(tx.arg_string,"next", argval)==1)
+     {
+	tx.ip_proto = (u_int8_t) str2int(argval);
+     }
+   else if (mode==IP)
+     {
+	tx.ip_proto = 59; // No Next Header for IPv6
+     }
 
 
+   if ((tx.ascii)&&(mode==IP)) // ASCII PAYLOAD overrides hex payload
+     {
+	strncpy((char *)tx.ip_payload, (char *)tx.ascii_payload, MAX_PAYLOAD_SIZE);
+	tx.ip_payload_s = strlen((char *)tx.ascii_payload);
+	tx.ip_len += tx.ip_payload_s;
+     }
+
+
+   /////////
+   // Want some padding? The specified number of padding bytes are ADDED to the
+   // payload. Note that this is only evaluated if we are in IP mode because
+   // UDP and TCP already might have been padded and set the ip_payload_s.
+   // (Note the difference in send_eth() where you specified the total number
+   // of bytes in the frame)
+   //
+   if ((tx.padding)&&(mode==IP))
+     {
+	for (i=0; i<tx.padding; i++)
+	  {
+	     tx.ip_payload[tx.ip_payload_s+i] = 0x42; // pad with THE ANSWER (why random?)
+	  }
+	tx.ip_payload_s += tx.padding;
+	tx.ip_len += tx.padding;
+     }
+
+   if (tx.ip6_id) {
+     t = libnet_build_ipv6_frag (tx.ip_proto,
+				 0,
+				 htons(tx.ip_frag),
+				 htonl(tx.ip6_id),
+				 (mode==IP) ? (tx.ip_payload_s) ? tx.ip_payload : NULL : NULL,
+				 (mode==IP) ? tx.ip_payload_s : 0,
+				 l,
+				 0);
+     tx.ip_len += LIBNET_IPV6_FRAG_H;
+     tx.ip_payload_s = 0;
+     tx.ip_proto = LIBNET_IPV6_NH_FRAGMENT;
+   }
+
+   // See RFC 2460 Routing Header
+   //
+   if ( (getarg(tx.arg_string,"segs", argval)==1) )
+     {
+        dummy = (unsigned int) str2int(argval);
+        if (dummy > 255) {
+          fprintf(stderr, " IP_Error: Maximal Routing Segments are 255!\n");
+          exit(1);
+        }
+        tx.ip6_segs = dummy;
+     }
+
+   if ( (getarg(tx.arg_string,"loose", argval)==1) )
+     {
+	// Fill reserved
+	memset(tx.ip_option, 0, 4);
+	tx.ip_option_s=4;
+
+	len = strlen(argval);
+	s = strtok(argval, ".+-;/>");
+	do
+	  {
+	     len--;
+	     *((struct libnet_in6_addr *) &tx.ip_option[tx.ip_option_s]) = libnet_name2addr6 (l, s, LIBNET_DONT_RESOLVE);
+	     tx.ip_option_s += 16;
+	  } while ( (s=strtok(NULL, ".+-;/>")) != NULL );
+
+	if (!tx.ip_option_s) {
+	  fprintf(stderr, " IP_Error: No Routing Hops found!\n");
+	  exit(1);
+	}
+
+	if (mode==IP && tx.ip_payload_s)
+	  memmove(tx.ip_payload+tx.ip_option_s, tx.ip_payload, tx.ip_payload_s);
+	else
+	  tx.ip_payload_s = 0;
+
+        memcpy(tx.ip_payload, tx.ip_option, tx.ip_option_s);
+        tx.ip_payload_s += tx.ip_option_s;
+
+	t = libnet_build_ipv6_routing(tx.ip_proto,
+				      (tx.ip_option_s -4) / 8,
+				      0,
+				      tx.ip6_segs,
+				      tx.ip_payload,
+				      tx.ip_payload_s,
+				      l,
+				      0);
+	tx.ip_len += LIBNET_IPV6_ROUTING_H + tx.ip_option_s;
+	tx.ip_payload_s = 0;
+	tx.ip_proto = LIBNET_IPV6_NH_ROUTING;
+     }
+
+   t = libnet_build_ipv6 (tx.ip_tos,
+			  tx.ip_flow,
+			  tx.ip_len,
+			  tx.ip_proto,
+			  tx.ip_ttl,
+			  tx.ip6_src,
+			  tx.ip6_dst,
+			  (mode==IP) ? (tx.ip_payload_s) ? tx.ip_payload : NULL : NULL,
+			  (mode==IP) ? tx.ip_payload_s : 0,
+			  l,
+			  0);
+
+   if (t == -1)
+     {
+	fprintf(stderr, " mz/create_ip_packet: Can't build IPv6 header: %s\n", libnet_geterror(l));
+	exit (0);
+     }
+
+   return t;
+}
 
