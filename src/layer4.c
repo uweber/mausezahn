@@ -304,6 +304,7 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
    
    enum 
      {
+	NONE,
 	ECHO_REQUEST,
 	REDIRECT,
 	UNREACHABLE
@@ -478,6 +479,7 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
 		     *(x),*(x+1),*(x+2),*(x+3));
 	  }
 	break; // ++++++++++++++++++++++
+      case NONE:
       case ECHO_REQUEST:
 	t = libnet_build_icmpv4_echo(tx.icmp_type, 
 				     tx.icmp_code, 
@@ -491,7 +493,10 @@ libnet_ptag_t  create_icmp_packet (libnet_t *l)
 	tx.ip_payload_s = LIBNET_ICMPV4_REDIRECT_H + tx.icmp_payload_s;  // for send_ip
 	if (verbose)
 	  {
-	     sprintf(tx.icmp_verbose_txt,"ICMP Echo Request (id=%u seq=%u)\n",tx.icmp_ident,tx.icmp_sqnr);
+	     if (icmp == NONE)
+		sprintf(tx.icmp_verbose_txt,"ICMP Type %u Code %u\n",tx.icmp_type,tx.icmp_code);
+	     else
+		sprintf(tx.icmp_verbose_txt,"ICMP Echo Request (id=%u seq=%u)\n",tx.icmp_ident,tx.icmp_sqnr);
 	  }
 	break; // ++++++++++++++++++++++
       case UNREACHABLE:
