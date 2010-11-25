@@ -396,6 +396,7 @@ struct tx_struct
    u_int8_t 
      ip_tos,
      ip_ttl,
+     ip6_rtype,
      ip6_segs,
      ip_proto;
    u_int8_t 

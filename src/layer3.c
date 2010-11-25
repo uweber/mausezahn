@@ -92,12 +92,13 @@
 		"|  frag_res1               Sets the reserved flag 1.\n" \
 		"|  frag_res2               Sets the reserved flag 2.\n" \
 		"|  id       0-65535	    Fragment ID\n" \
-		"|  loose    <addresses>    Source Routing Header (RH0); Deprecated in RFC 5095\n" \
+		"|  loose    <addresses>    Source Routing Header\n" \
+		"|  rtype    0,2            Source Routing Type: 0 (Deprecated in RFC 5095) or 2 for Mobile IP\n" \
 		"|  segments 0-255          Number of route segments left, used by RH0\n" \
 		"|\n" \
 		"| Additionally the Ethertype can be specified:\n" \
 		"|\n" \
-		"|  ether_type 00:00-ff:ff  Only accessible in L2 mode (default = 86:d = IPv6)\n" \
+		"|  ether_type 00:00-ff:ff  Only accessible in L2 mode (default = 86:dd = IPv6)\n" \
 		"|  \n"
 
 
@@ -465,6 +466,7 @@ libnet_ptag_t  create_ip6_packet (libnet_t *l)
    tx.ip_len   = 0;
    tx.ip_id    = 0;
    tx.ip6_segs = 0;
+   tx.ip6_rtype = 0;
    tx.ip6_id   = 0;
    tx.ip_frag  = 0;              // Flags and Offset !!!
    tx.ip_tos   = 0;
@@ -648,7 +650,7 @@ libnet_ptag_t  create_ip6_packet (libnet_t *l)
 
    // See RFC 2460 Routing Header
    //
-   if ( (getarg(tx.arg_string,"segs", argval)==1) )
+   if ( (getarg(tx.arg_string,"segments", argval)==1) )
      {
         dummy = (unsigned int) str2int(argval);
         if (dummy > 255) {
@@ -656,6 +658,16 @@ libnet_ptag_t  create_ip6_packet (libnet_t *l)
           exit(1);
         }
         tx.ip6_segs = dummy;
+     }
+
+   if ( (getarg(tx.arg_string,"rtype", argval)==1) )
+     {
+	dummy = (unsigned int) str2int(argval);
+	if (dummy > 255) {
+	  fprintf(stderr, " IP_Error: Maximum Routing Type is 255!\n");
+	  exit(1);
+	}
+	tx.ip6_segs = dummy;
      }
 
    if ( (getarg(tx.arg_string,"loose", argval)==1) )
@@ -688,7 +700,7 @@ libnet_ptag_t  create_ip6_packet (libnet_t *l)
 
 	t = libnet_build_ipv6_routing(tx.ip_proto,
 				      (tx.ip_option_s -4) / 8,
-				      0,
+				      tx.ip6_rtype,
 				      tx.ip6_segs,
 				      tx.ip_payload,
 				      tx.ip_payload_s,
