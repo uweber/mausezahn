@@ -73,6 +73,7 @@
 #define MAX_DATA_BLOCKS 1000       // how many data blocks of size TIME_COUNT-1 should be written per file
 #define MAXBYTES_TO_READ 1500      // how many bytes the pcap routine should read from net
 #define RCV_RTP_MAX_BAR_WIDTH 500  // max line-width printed in BAR mode (see rcv_rtp.c)
+#define BILLION 1E9
 
 #define ETH_SRC 1   // These are only some symbols used by some functions. (Don't touch)
 #define ETH_DST 2   // These are only some symbols used by some functions.
@@ -262,7 +263,7 @@ char filename[256];
 FILE *fp, *fp2;             // global multipurpose file pointer
 
 long double total_d;
-clock_t mz_start, mz_stop;
+struct timespec mz_start, mz_stop;
 
 enum rtp_display_mode {
 	BAR, NCURSES, TEXT
