@@ -44,8 +44,9 @@ int complexity()
      nr_dp   = 1, 
      nr_sp   = 1,
      nr_da   = 1,
-     nr_sa   = 1;
-   
+     nr_sa   = 1,
+     nr_sa6  = 1;
+
    u_int32_t 
      sn1, 
      sn2, 
@@ -100,15 +101,19 @@ int complexity()
 	//fprintf(stderr,"SA Range = %lu\n",nr_sa);
      }
    
+   if (tx.ip6_src_rangesize > 0)
+     {
+      nr_sa6 = tx.ip6_src_rangesize;
+      //fprintf(stderr,"SA6 Range = %lu\n",nr_sa6);
+     }
+
    total_d *= tx.count;
    total_d *= nr_sqnr;
    total_d *= nr_dp;
    total_d *= nr_sp;
    total_d *= nr_da;
-   total_d *= nr_sa;  
-   
-
-
+   total_d *= nr_sa;
+   total_d *= nr_sa6;
 
    ref=0xffffffff;
 
@@ -168,7 +173,7 @@ int complexity()
 // Send complete frame (layers 2, 3, 4) multiple times if required
 // 
 // 
-int send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4)
+int send_frame (libnet_t *l, libnet_ptag_t   t3, libnet_ptag_t  t4)
 {
    int i=0, count;
 
@@ -178,6 +183,7 @@ int send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4)
      sp_isrange,
      ip_dst_isrange,
      ip_src_isrange,
+     ip6_src_isrange,
      rtp_mode=0;
 
    
@@ -187,6 +193,7 @@ int send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4)
    sp_isrange = tx.sp_isrange;
    ip_dst_isrange = tx.ip_dst_isrange;
    ip_src_isrange = tx.ip_src_isrange | tx.ip_src_rand;
+   ip6_src_isrange = tx.ip6_src_rangesize > 0;
    if (mode == RTP) rtp_mode = 1;
    
    if (count==0) goto AGAIN;
@@ -245,6 +252,14 @@ int send_frame (libnet_t *l, libnet_ptag_t  t3, libnet_ptag_t  t4)
 		  goto AGAIN;
 	       }
 	  }
+
+      if (ip6_src_isrange)
+        {
+           if (update_IP6_SA(l, t3, t4)==0)
+             {
+              goto AGAIN;
+             }
+        }
 
 	if (rtp_mode) // update SQNR and Timestamps in RTP header and payload
 	  {

@@ -120,6 +120,8 @@ int reset()
    tx.ip_src_isrange = 0;
    tx.ip_src_start = 0;
    tx.ip_src_stop = 0;
+   tx.ip6_src_rangesize = 0;
+   tx.ip6_src_current = 0;
    
    tx.ip_dst_start = 0;
    tx.ip_dst_stop = 0;   
@@ -476,9 +478,12 @@ int getopts (int argc, char *argv[])
 			else if (get_ip_range_src(tx.ip_src_txt)) { // returns 1 when no range has been specified
 				// name2addr4 accepts a DOTTED DECIMAL ADDRESS or a FQDN:
 				if (ipv6_mode)
-					tx.ip6_src = libnet_name2addr6 (l, tx.ip_src_txt, LIBNET_RESOLVE);
+                        {
+                           if (get_ip6_range_src(l, tx.ip_src_txt))
+                              tx.ip6_src = libnet_name2addr6 (l, tx.ip_src_txt, LIBNET_RESOLVE);
+                        }
 				else
-					tx.ip_src = libnet_name2addr4 (l, tx.ip_src_txt, LIBNET_RESOLVE);
+                           tx.ip_src = libnet_name2addr4 (l, tx.ip_src_txt, LIBNET_RESOLVE);
 			}
 		}
 		else { // no source IP specified: by default use own IP address
