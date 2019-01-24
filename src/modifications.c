@@ -189,6 +189,44 @@ int update_IP_SA (libnet_t *l, libnet_ptag_t t)
    return i;
 }
 
+int update_IP6_SA (libnet_t *l, libnet_ptag_t t3, libnet_ptag_t t4)
+{
+   ++tx.ip6_src_current;
+   tx.ip6_src_current %= tx.ip6_src_rangesize;
+
+   tx.ip6_src = tx.ip6_src_range[tx.ip6_src_current];
+
+   t3 = libnet_build_ipv6 (tx.ip_tos,
+                    tx.ip_flow,
+                    tx.ip_len,
+                    tx.ip_proto,
+                    tx.ip_ttl,
+                    tx.ip6_src,
+                    tx.ip6_dst,
+                    (mode==IP) ? (tx.ip_payload_s) ? tx.ip_payload : NULL : NULL,
+                    (mode==IP) ? tx.ip_payload_s : 0,
+                    l,
+                    t3);
+
+   if (t3 == -1)
+     {
+      fprintf(stderr," mz/update_IP6_SA: IP address manipulation failed!\n");
+      exit (1);
+     }
+
+   if (mode==UDP)
+      t4 = update_USUM(l, t4);
+   else if (mode==TCP)
+      t4 = update_TSUM(l, t4);
+
+   if (t4 < 0)
+     {
+      fprintf(stderr," mz/update_IP6_SA: UDP/TCP address manipulation failed!\n");
+      exit (1);
+     }
+   return tx.ip6_src_current == 0 ? 1 : 0;
+}
+
 
 
 
@@ -238,7 +276,7 @@ int update_IP_DA(libnet_t *l, libnet_ptag_t t)
    //       E.g. if (rand_ip == tx.ip_src) goto rand_again;  // never use true interface IP
    // TODO: Check other address exceptions ...
    
-   t = libnet_build_ipv4 (tx.ip_len, 
+   t = libnet_build_ipv4 (tx.ip_len,
 			  tx.ip_tos, 
 			  tx.ip_id, 
 			  tx.ip_frag,
@@ -415,9 +453,6 @@ int update_USUM(libnet_t *l, libnet_ptag_t t)
      int sum = 0;
      unsigned int tmp;
 
-     if (tx.udp_sum != 0)
-	return 0;
-
      sum += libnet_in_cksum((u_int16_t *) &tx.ip6_src, 16);
      if (tx.ip_option_s && tx.ip6_segs)
        sum += libnet_in_cksum((u_int16_t *) &tx.ip_option[tx.ip_option_s - 16], 16); // Use last IP address
@@ -455,9 +490,6 @@ int update_TSUM(libnet_t *l, libnet_ptag_t t)
 {
      int sum = 0;
      unsigned int tmp;
-
-     if (tx.tcp_sum != 0)
-	return 0;
 
      sum += libnet_in_cksum((u_int16_t *) &tx.ip6_src, 16);
      if (tx.ip_option_s && tx.ip6_segs)

@@ -85,6 +85,7 @@
 // -----  PCAP-specific definitions: ---------------------
 #define IPADDRSIZE 46
 
+struct libnet_t;
 
 int MZ_SIZE_LONG_INT;
 
@@ -375,12 +376,15 @@ struct tx_struct
    // IP parameters
    u_int32_t ip_src;          // has always network byte order(!)
    struct libnet_in6_addr ip6_src;
-   char      ip_src_txt[256];
+   char      ip_src_txt[1000];
    int       ip_src_rand;     // if set to 1 then SA should be random
    u_int32_t ip_src_h;        // mirror of ip_src (NOT network byte order => easy to count)
    u_int32_t ip_src_start;    // start of range (NOT network byte order => easy to count)
    u_int32_t ip_src_stop;     // stop of range  (NOT network byte order => easy to count)
    int       ip_src_isrange;  // if set to 1 then the start/stop values above are valid.
+   struct libnet_in6_addr ip6_src_range[50];
+   u_int16_t       ip6_src_rangesize;
+   u_int16_t       ip6_src_current;
    u_int32_t ip_dst;          // has always network byte order(!)
    struct libnet_in6_addr ip6_dst;
    char      ip_dst_txt[256];
@@ -631,6 +635,7 @@ int type2str(u_int16_t type, char *str);
 // 
 int get_ip_range_dst (char *arg);
 int get_ip_range_src (char *arg);
+int get_ip6_range_src (libnet_t *l, char *arg);
 
 // Sets a random SA for a given IP packet.
 // Return value: 0 upon success, 1 upon failure
@@ -718,6 +723,9 @@ int update_RTP(libnet_t *l, libnet_ptag_t t);
 // 
 // RETURNS '1' if tx.ip_src restarts
 int update_IP_SA (libnet_t *l, libnet_ptag_t t);
+
+int update_IP6_SA (libnet_t *l, libnet_ptag_t t3, libnet_ptag_t t4);
+
 
 
 // Applies another DESTINATION IP address from a specified range (tx.ip_dst_isrange==1) 
