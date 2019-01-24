@@ -343,7 +343,7 @@ int send_arp ()
      }
    
    // this is for the statistics:
-   mz_start = clock();
+   clock_gettime(CLOCK_MONOTONIC, &mz_start);
    total_d = tx.count;
 
    
@@ -852,7 +852,7 @@ int send_bpdu ()
      loop=tx.count;
 
    // this is for the statistics:
-   mz_start = clock();
+   clock_gettime(CLOCK_MONOTONIC, &mz_start);
    total_d = tx.count;
 
    

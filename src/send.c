@@ -139,9 +139,8 @@ int complexity()
      }
    
    
-   
-   mz_start = clock();
-   
+   clock_gettime(CLOCK_MONOTONIC, &mz_start);
+
    infinity:
    
    

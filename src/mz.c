@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
    libnet_t             *l;               // the context 
    libnet_ptag_t         t2=0, t3=0, t4=0;      // handles to layers 
    
-   double cpu_time_used;
+   double time_used;
 
    // Check if we have root priviliges
    if ( (getuid()!=0) && (geteuid()!=0) )
@@ -344,17 +344,20 @@ int main(int argc, char *argv[])
 
    if (!quiet) 
      {
-	mz_stop = clock();
-	cpu_time_used = ((double) (mz_stop - mz_start)) / CLOCKS_PER_SEC;
-	if (cpu_time_used > 0)
+      clock_gettime(CLOCK_MONOTONIC, &mz_stop);
+      time_used = ( mz_stop.tv_sec - mz_start.tv_sec )
+        + ( mz_stop.tv_nsec - mz_start.tv_nsec )
+        / BILLION;
+
+      if (time_used >= 1)
 	  {
-	     total_d /= cpu_time_used;
-	     fprintf(stderr, "%.2f seconds (%.Lf packets per second)\n",cpu_time_used,total_d);
+           total_d /= time_used;
+           fprintf(stderr, "%.2f real seconds (%.Lf packets per second)\n",time_used,total_d);
 	  }
 	else
 	  {
-	     fprintf(stderr, "\n");
-	  }
+           fprintf(stderr, "%.2f real seconds\n",time_used);
+        }
      }
    
    return(0);

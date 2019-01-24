@@ -676,7 +676,7 @@ int send_cdp ()
    
    
    // this is for the statistics:
-   mz_start = clock();
+   clock_gettime(CLOCK_MONOTONIC, &mz_start);
    total_d = tx.count;
    
    if (!count) goto AGAIN;
