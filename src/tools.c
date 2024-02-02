@@ -384,6 +384,46 @@ int get_ip_range_src (char *arg)
 }
 
 
+// Return value: 0 upon success, 1 upon failure.
+//
+int get_ip6_range_src (libnet_t *l, char *arg)
+{
+
+   int
+       i=0,
+       found_comma=0;
+
+   char *str;
+
+   int len = strlen(arg);
+
+   // Find ","
+   for (i=0; i<len; i++)
+   {
+      if (arg[i]==',')
+         found_comma=1;
+   }
+
+   if (found_comma)
+   {
+      str = strtok (arg, ",");
+
+      while (str)
+      {
+         tx.ip6_src_range[tx.ip6_src_rangesize] = libnet_name2addr6(l, str, LIBNET_RESOLVE);
+         ++tx.ip6_src_rangesize;
+         str = strtok (NULL, ",");
+      }
+
+      tx.ip6_src = tx.ip6_src_range[0];
+
+      return 0;
+   }
+
+   return 1; // ERROR: The specified argument string is not a range!
+}
+
+
 // Scans tx.eth_dst_txt or tx.eth_src_txt and sets the corresponding
 // MAC addresses (tx.eth_dst or tx.eth_src) accordingly.
 // Argument: What string should be checked, ETH_SRC or ETH_DST.
